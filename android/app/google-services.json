@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "195040410859",
+    "firebase_url": "https://saffaron-6c834.firebaseio.com",
+    "project_id": "saffaron-6c834",
+    "storage_bucket": "saffaron-6c834.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:195040410859:android:02c0b534047def9811d2ae",
+        "android_client_info": {
+          "package_name": "com.saffaron"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "195040410859-ide4tar3nsrd1inuj3m54tjsk59i9c79.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.saffaron",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "195040410859-nbk1i9j8jasohh45lcisrsda6ps5901a.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCd7Z6IGnzoYZmoSaCMmvgQlmTwTbb9ccQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "195040410859-nbk1i9j8jasohh45lcisrsda6ps5901a.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

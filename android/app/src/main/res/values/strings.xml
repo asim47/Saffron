@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">saffaron</string>
+    <string name="server_client_id">471791210116-jvcd4rh4j6fshqc5kmcbo0tg38597bvj.apps.googleusercontent.com</string>
+    <string name="facebook_app_id">3380982908600109</string>
+    <string name="fb_login_protocol_scheme">fb3380982908600109</string>
+    
+</resources>
