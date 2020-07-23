@@ -167,12 +167,14 @@ const ResItem = (props) => {
                                             <ClickAbleByAsim
                                                 onPress={() => {
                                                     if (!value.cart) {
-                                                        dispatch(Actions.AddProductToCart(value.id))
+                                                   
                                                         if (value.extra.length > 0) {
                                                             setSelectedItemToShowForExtraItem(value.id)
                                                             setExtraDiaogImage(value.image)
                                                             setDialogOpen(true)
                                                             setExtraDiaogName(value.name)
+                                                        }else{
+                                                            dispatch(Actions.AddProductToCart(value.id))
                                                         }
                                                     } else {
                                                         dispatch(Actions.RemoveProduct(value.id_cart))
@@ -195,6 +197,8 @@ const ResItem = (props) => {
                             )
                         })
                     }
+
+                    <View style={{height:50}} />
                 </ScrollView>
                 <ExtraItemsDialog
                     navigate={navigate}

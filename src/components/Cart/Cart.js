@@ -61,20 +61,20 @@ const Cart = (props) => {
     useEffect(() => {
         priceCalculator()
     }, [CartData, ExtraItems])
-    useEffect(() => {
-        if (CartData && CartData?.menu?.length != 0) {
-            let Arr = []
-            for (const value of CartData?.menu) {
-                for (const value2 of value.products.extra) {
-                    if (value2.cart) {
-                        Arr = [...Arr, value2]
-                    }
-                }
-            }
-            setExtraItems(Arr)
-            priceCalculator()
-        }
-    }, [CartData])
+    // useEffect(() => {
+    //     if (CartData && CartData?.menu?.length != 0) {
+    //         let Arr = []
+    //         for (const value of CartData?.menu) {
+    //             for (const value2 of value.products.extra) {
+    //                 if (value2.cart) {
+    //                     Arr = [...Arr, value2]
+    //                 }
+    //             }
+    //         }
+    //         setExtraItems(Arr)
+    //         priceCalculator()
+    //     }
+    // }, [CartData])
 
 
     useEffect(() => {
@@ -88,17 +88,17 @@ const Cart = (props) => {
         let price = 0;
 
         if (!CartData) return
-        if (!ExtraItems) return
+        // if (!ExtraItems) return
         for (const value of CartData?.menu) {
             price = price + ((value?.products?.price * (value.products.qty_cart || 1)) || 0)
         }
 
-        for (const value of ExtraItems) {
-            if (value.cart) {
-                price = price + ((value.price * (value.qty_cart || 1)) || 0)
+        // for (const value of ExtraItems) {
+        //     if (value.cart) {
+        //         price = price + ((value.price * (value.qty_cart || 1)) || 0)
 
-            }
-        }
+        //     }
+        // }
 
         setPrice(price)
 
@@ -301,7 +301,7 @@ const Cart = (props) => {
                         return (
                             <View
                                 style={{
-                                    height: 120,
+                                    height: 140,
                                     width: "90%",
                                     justifyContent: "center",
                                     alignItems: "center",
@@ -330,16 +330,23 @@ const Cart = (props) => {
                                     />
                                 </View>
                                 <View style={{ flex: 1, height: "100%", justifyContent: "center", padding: 5 }}>
-                                    <Text style={{ color: "#871014", fontSize: 22, }}>
-                                        {value?.products?.name}
+                                    <Text style={{ color: "#871014", fontSize: 19, }}>
+                                    {value.products.name}
+                                    </Text>
+                                    <Text style={{ color: "#871014", fontSize: 17, }}>
+                                        {value?.extra?.name}
                                     </Text>
                                     <Text style={{ color: "#871014", fontSize: 20, fontWeight: "bold", marginTop: 10 }}>
-                                        ${value?.products?.price}
+                                        ${value.extra ?value.extra.price :value?.products?.price}
                                     </Text>
 
                                     <View style={{ height: 30, width: 100, borderRadius: 100, justifyContent: "center", alignItems: "center", borderWidth: .7, borderColor: "#871014", overflow: "hidden", flexDirection: "row", alignSelf: "flex-end" }}>
                                         <ClickAbleByAsim onPress={() => {
-                                            dispatch(Actions.IncreaseQTY(value?.products?.id))
+                                            if(value.extra){
+                                                dispatch(Actions.AddExtraItemToCart(value?.extra?.id))
+                                            }else{
+                                                dispatch(Actions.IncreaseQTY(value?.products?.id))
+                                            }
                                         }} style={{ flex: 1, height: "100%", justifyContent: "center", alignItems: "center", backgroundColor: "#871014" }}>
                                             <Text style={{ fontSize: 20, color: "white" }}>+</Text>
                                         </ClickAbleByAsim>
@@ -361,15 +368,15 @@ const Cart = (props) => {
 
 
 
-                {
+                {/* {
                     ExtraItems.length > 0 ? (
                         <Text style={{ fontSize: 20, marginTop: 20, marginBottom: 20, color: "#871014", fontWeight: "bold" }}>
                             Extra Items
                         </Text>
                     ) : null
-                }
+                } */}
 
-                {
+                {/* {
                     ExtraItems?.map((value) => {
                         if (!value.cart) return null
                         return (
@@ -425,7 +432,7 @@ const Cart = (props) => {
                             </View>
                         )
                     })
-                }
+                } */}
                 <Text style={{ fontSize: 20, marginTop: 20, marginBottom: 20, color: "#871014", fontWeight: "bold" }}>
                     Delievery Type
                 </Text>
@@ -562,7 +569,7 @@ const Cart = (props) => {
                     </View>
                     <View style={{ flex: 1, height: "100%", justifyContent: "center", alignItems: "center" }}>
                         <Text style={{ fontWeight: "bold", fontSize: 22, color: "#871014" }}>
-                            ${Math.floor(Price + 5)}
+                            ${IsHomeDelieveryType ? Math.floor(Price + 5) : Math.ceil(Price)}
                         </Text>
                     </View>
 

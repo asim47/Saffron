@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react'
-import { View, Text, Dimensions, Image, StyleSheet, ImageBackground, Alert, } from 'react-native'
+import { View, Text, Dimensions, Image, StyleSheet, ImageBackground, Alert, ScrollView, ActivityIndicator } from 'react-native'
 import ClickAbleByAsim from '../../comman/ClickAbleByAsim';
 import AntDesign from "react-native-vector-icons/AntDesign"
-import { ScrollView } from 'react-native-gesture-handler';
+// import { ScrollView } from 'react-native-gesture-handler';
 import { Item, Label, Input, Icon } from 'native-base';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import moment from "moment"
@@ -10,6 +10,7 @@ import { TabView, SceneMap } from 'react-native-tab-view';
 import ExtraItemsDialog from '../ResItem/ExtraItemsDialog';
 import { useDispatch, useSelector } from "react-redux"
 import * as Actions from "../../../store/Action"
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 const initialLayout = { width: Dimensions.get('window').width };
 const ReserveTable = (props) => {
@@ -18,9 +19,12 @@ const ReserveTable = (props) => {
     const dispatch = useDispatch()
 
     const [DialogOpen, setDialogOpen] = useState(false)
+    const [Loadding, setLoadding] = useState(false)
     const [index, setIndex] = React.useState(0);
+    const [TimeIndex, setTimeIndex] = React.useState(0);
     const [date, setDate] = useState(new Date());
     const [time, setTime] = useState(new Date());
+    const [timeTo, setTimeTo] = useState(new Date());
     const [NoOfGuests, setNoOfGuests] = useState("");
     const [mode, setMode] = useState('date'); //date //time
     const [show, setShow] = useState(false);
@@ -52,9 +56,9 @@ const ReserveTable = (props) => {
         }
     }, [SelectedItemToShowForExtraItem, ResItems, UseLess])
 
-    useEffect(() => {
-        getTables()
-    }, [])
+    // useEffect(() => {
+    //     getTables()
+    // }, [])
 
     useEffect(() => {
         dispatch(Actions.GettingCategories())
@@ -70,9 +74,7 @@ const ReserveTable = (props) => {
 
 
     function getTables() {
-        dispatch(Actions.GetTables()).then((res) => {
-            setTables(res)
-        })
+
     }
 
     const onChange = (event, selectedDate) => {
@@ -82,7 +84,12 @@ const ReserveTable = (props) => {
             setDate(currentDate);
 
         } else {
-            setTime(currentDate)
+            if (TimeIndex == 0) {
+                setTime(currentDate)
+
+            } else {
+                setTimeTo(currentDate)
+            }
         }
     };
 
@@ -113,83 +120,124 @@ const ReserveTable = (props) => {
 
     const FirstRoute = () => (
         <View style={{ flex: 1, alignItems: "center" }}>
-            <Text style={{ fontSize: 20, marginTop: 20, marginBottom: 20, color: "#871014", fontWeight: "bold" }}>
-                Find Table
-        </Text>
+            <KeyboardAwareScrollView style={{ width: "100%" }} contentContainerStyle={{ alignItems: "center" }} keyboardDismissMode="none" keyboardShouldPersistTaps="always">
+                <Text style={{ fontSize: 20, marginTop: 20, marginBottom: 20, color: "#871014", fontWeight: "bold" }}>
+                    Find Table
+                    </Text>
 
-            <Item style={{ width: "90%", marginTop: 30 }} floatingLabel>
-                <Label >Number of guests</Label>
-                <Input
-                    keyboardType="number-pad"
-                    value={NoOfGuests}
-                    onChangeText={e => setNoOfGuests(e)}
-                />
-                <Icon
-                    type="FontAwesome5"
-                    name="pen"
-                    style={{ color: "grey", fontSize: 16 }}
-                />
-            </Item>
+                <Item style={{ width: "90%", marginTop: 30 }} floatingLabel>
+                    <Label >Number of guests</Label>
+                    <Input
+                        keyboardType="number-pad"
+                        value={NoOfGuests}
+                        onChangeText={e => setNoOfGuests(e)}
+                    />
+                    <Icon
+                        type="FontAwesome5"
+                        name="pen"
+                        style={{ color: "grey", fontSize: 16 }}
+                    />
+                </Item>
 
-            <Item style={{ width: "90%", marginTop: 30 }} floatingLabel>
-                <Label >Date</Label>
-                <Input
-                    value={moment(date).format("DD/MM/YYYY")}
-                    onFocus={showDatepicker}
-                />
-                <Icon
-                    onPress={showDatepicker}
-                    type="FontAwesome5"
-                    name="pen"
-                    style={{ color: "grey", fontSize: 16 }}
-                />
-            </Item>
+                <Item style={{ width: "90%", marginTop: 30 }} floatingLabel>
+                    <Label >Date</Label>
+                    <Input
+                        value={moment(date).format("DD/MM/YYYY")}
+                        onFocus={showDatepicker}
+                    />
+                    <Icon
+                        onPress={showDatepicker}
+                        type="FontAwesome5"
+                        name="pen"
+                        style={{ color: "grey", fontSize: 16 }}
+                    />
+                </Item>
 
-            <Item style={{ width: "90%", marginTop: 30 }} floatingLabel>
-                <Label >Time from </Label>
-                <Input
-                    value={moment(time).format("h:m a ")}
-                    onFocus={showTimepicker}
-                />
-                <Icon
-                    onPress={showTimepicker}
-                    type="FontAwesome5"
-                    name="pen"
-                    style={{ color: "grey", fontSize: 16 }}
-                />
-            </Item>
-            <Text style={{ color: "red", margin: 20 }}>
-                {ErrorMsg}
-            </Text>
-            <ClickAbleByAsim
-                onPress={() => {
-                    if (!NoOfGuests) return setErrorMsg("Please enter number of guests");
-                    setErrorMsg("")
-                    setIndex(1)
-                }}
-                style={{ height: 50, width: 270, backgroundColor: "#871014", borderRadius: 100, justifyContent: "center", alignItems: "center", marginTop: 10 }}
-            >
-                <Text style={{ color: "white", fontSize: 18 }}>Find Table</Text>
-            </ClickAbleByAsim>
+                <Item style={{ width: "90%", marginTop: 30 }} floatingLabel>
+                    <Label >Time from </Label>
+                    <Input
+                        value={moment(time).format("h:mm a ")}
+                        onFocus={() => {
+                            setTimeIndex(0)
+                            showTimepicker()
+                        }}
+                    />
+                    <Icon
+                        onPress={() => {
+                            setTimeIndex(0)
+                            showTimepicker()
+                        }}
+                        type="FontAwesome5"
+                        name="pen"
+                        style={{ color: "grey", fontSize: 16 }}
+                    />
+                </Item>
+
+                <Item style={{ width: "90%", marginTop: 30 }} floatingLabel>
+                    <Label >Time To </Label>
+                    <Input
+                        value={moment(timeTo).format("h:mm a ")}
+                        onFocus={() => {
+                            setTimeIndex(1)
+                            showTimepicker()
+                        }}
+                    />
+                    <Icon
+                        onFocus={() => {
+                            setTimeIndex(1)
+                            showTimepicker()
+                        }}
+                        type="FontAwesome5"
+                        name="pen"
+                        style={{ color: "grey", fontSize: 16 }}
+                    />
+                </Item>
+                <Text style={{ color: "red", margin: 20 }}>
+                    {ErrorMsg}
+                </Text>
+                <ClickAbleByAsim
+                    onPress={() => {
+                        if (!NoOfGuests) return setErrorMsg("Please enter number of guests");
+                        setErrorMsg("")
+                        setLoadding(true)
+                        dispatch(Actions.GetTables(NoOfGuests, date, time, timeTo)).then((res) => {
+                            setLoadding(false)
+                            if (!res) {
+                                return setErrorMsg("Please choose a time between 09:00am and 02:00:am")
+                            }
+                            setTables(res)
+                            setIndex(1)
+
+                        })
+
+                    }}
+                    style={{ height: 50, width: 270, backgroundColor: "#871014", borderRadius: 100, justifyContent: "center", alignItems: "center", marginTop: 10 }}
+                >
+                    {
+                        Loadding ? <ActivityIndicator color="white" /> : <Text style={{ color: "white", fontSize: 18 }}>Find Table</Text>
+                    }
+
+                </ClickAbleByAsim>
 
 
-            <ClickAbleByAsim
-                onPress={() => navigate("Home")}
-                style={{ height: 50, width: 270, backgroundColor: "white", borderRadius: 100, justifyContent: "center", alignItems: "center", marginTop: 20 }}
-            >
-                <Text style={{ color: "#871014", fontSize: 18 }}>CANCEL</Text>
-            </ClickAbleByAsim>
-            {show && (
-                <DateTimePicker
-                    testID="dateTimePicker"
-                    value={mode === "date" ? date : time}
-                    mode={mode}
-                    minimumDate={new Date()}
-                    is24Hour={false}
-                    display="default"
-                    onChange={onChange}
-                />
-            )}
+                <ClickAbleByAsim
+                    onPress={() => navigate("Home")}
+                    style={{ height: 50, width: 270, backgroundColor: "white", borderRadius: 100, justifyContent: "center", alignItems: "center", marginTop: 20 }}
+                >
+                    <Text style={{ color: "#871014", fontSize: 18 }}>CANCEL</Text>
+                </ClickAbleByAsim>
+                {show && (
+                    <DateTimePicker
+                        testID="dateTimePicker"
+                        value={mode === "date" ? date : time}
+                        mode={mode}
+                        minimumDate={new Date()}
+                        is24Hour={false}
+                        display="default"
+                        onChange={onChange}
+                    />
+                )}
+            </KeyboardAwareScrollView>
         </View>
 
     );
@@ -222,7 +270,7 @@ const ReserveTable = (props) => {
 
                                     <ClickAbleByAsim
                                         onPress={() => {
-                                            dispatch(Actions.AddTables(value.id, value.person, moment(time).format("H:m"), moment(date).format("YYYY-DD-MM"), getTables))
+                                            dispatch(Actions.AddTables(value.id, value.person, moment(time).format("H:m"), date.toISOString(), getTables))
                                             setIndex(2)
                                         }}
                                         style={{ height: 30, width: 100, backgroundColor: "#871014", borderRadius: 100, justifyContent: "center", alignItems: "center", }}
@@ -310,7 +358,7 @@ const ReserveTable = (props) => {
             <Text style={{ fontSize: 20, marginTop: 20, marginBottom: 20, color: "#871014", fontWeight: "bold" }}>
                 Choose Menu
             </Text>
-            <ScrollView style={{ width: "100%" }} contentContainerStyle={{ alignItems: "center" }}>
+            <ScrollView style={{ width: "100%" }} contentContainerStyle={{ alignItems: "center" }} >
 
                 {/* <View style={{ width: "100%", flexDirection: "row", flexWrap: "wrap",alignItems:"center",bac }}> */}
                 {
@@ -443,13 +491,36 @@ const ReserveTable = (props) => {
             </View>
             {/* Navbar */}
 
-            <TabView
+            {/* <TabView
                 navigationState={{ index, routes }}
                 renderScene={renderScene}
                 onIndexChange={setIndex}
                 initialLayout={initialLayout}
                 renderTabBar={() => <View></View>}
-            />
+            /> */}
+            {
+                index == 0
+                    ? (
+                        <FirstRoute />
+                    )
+                    :
+                    index == 1
+                        ? (
+                            <SecondRoute />
+                        )
+                        :
+                        index == 2
+                            ? (
+                                <ThirdRoute />
+                            )
+                            :
+                            index == 3
+                                ? (
+                                    <ForthRoute />
+                                )
+                                : null
+
+            }
 
         </View>
     )

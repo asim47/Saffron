@@ -61,7 +61,11 @@ const MyOrders = (props) => {
                             {
                                 MyOrder.map((value, index) => {
                                     return (
-                                        <View style={{ height: 100, width: "90%", borderRadius: 20, backgroundColor: "white", elevation: 6, marginBottom: 10, flexDirection: "row" }}>
+                                        <ClickAbleByAsim
+                                            onPress={() => {
+                                                navigate("OrderDetails", { data: value })
+                                            }}
+                                            style={{ height: 100, width: "90%", borderRadius: 20, backgroundColor: "white", elevation: 6, marginBottom: 10, flexDirection: "row" }}>
                                             <View style={{ height: "100%", width: 30, justifyContent: "center", alignItems: "center" }}>
                                                 <Text>
                                                     {index + 1})
@@ -72,25 +76,25 @@ const MyOrders = (props) => {
                                                     Order ID: {value.id}
                                                 </Text>
                                                 <Text>
-                                                    Order Date: 
+                                                    Order Date:
                                                 </Text>
                                                 <Text>
                                                     Order Status: pending
                                                 </Text>
 
                                             </View>
-                                            <View style={{ flex: 1,  justifyContent: "center", paddingLeft: 20 }}>
+                                            <View style={{ flex: 1, justifyContent: "center", paddingLeft: 20 }}>
                                                 <Text>
                                                     Products: {value.menu_detail.length}
                                                 </Text>
                                                 <Text>
-                                                    Total: {value.total}
+                                                    Total: {Math.ceil(value.total)}
                                                 </Text>
                                                 <Text>
                                                     Paid Via: {value.payment_method}
                                                 </Text>
                                             </View>
-                                        </View>
+                                        </ClickAbleByAsim>
                                     )
                                 })
                             }

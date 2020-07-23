@@ -1,6 +1,6 @@
 import Axios from "axios";
 import { API_ENDPOINT } from "../../env";
-
+import moment from "moment"
 
 export const GETTING_CATEGORIES = "GETTING_CATEGORIES"
 export const GETTING_CART_DATA = "GETTING_CART_DATA"
@@ -97,16 +97,24 @@ export const GetCart = () => async (dispatch, getState) => {
 }
 
 
-export const GetTables = () => async (dispatch, getState) => {
+export const GetTables = (NoOfGuests, date, time, timeTo) => async (dispatch, getState) => {
 
     try {
-        const res = await Axios.post(API_ENDPOINT + "/api/tables", null, {
+
+        //rest.technozone.com.pk/api/tables?persons=4&date=2020-07-24&time=13:30&time_to=14:30
+        const res = await Axios.post(API_ENDPOINT + `/api/tables?persons=${NoOfGuests}&date=${moment(date).format("YYYY-MM-DD")}&time=${moment(time).format("HH:mm")}&time_to=${moment(timeTo).format("HH:mm")}`, null, {
             headers: {
                 Authorization: `Bearer ${getState().auth.Token}`
             },
         });
+ 
+        if (res.data.meta.status == 200) {
+            console.log(res.data.data)
+            return res.data.data
 
-        return res.data.data
+        } else {
+            return false
+        }
 
     } catch (error) {
         console.log(error.response.data)
@@ -122,7 +130,8 @@ export const AddTables = (id, persons, time, date, get) => async (dispatch, getS
                 Authorization: `Bearer ${getState().auth.Token}`
             },
         });
-        get()
+
+        console.log(res.data)
         // return res.data.data
 
     } catch (error) {
@@ -149,7 +158,7 @@ export const RemoveTables = (id) => async (dispatch, getState) => {
 }
 
 
-export const  RemoveQTY = (id) => async (dispatch, getState) => {
+export const RemoveQTY = (id) => async (dispatch, getState) => {
 
     try {
         const res = await Axios.post(API_ENDPOINT + "/api/removeFromCart?id=" + id, null, {
@@ -185,13 +194,14 @@ export const RemoveProduct = (id) => async (dispatch, getState) => {
 }
 
 export const IncreaseQTY = (id) => async (dispatch, getState) => {
-
+    console.log(id)
     try {
         const res = await Axios.post(API_ENDPOINT + "/api/addToCart?id=" + id, null, {
             headers: {
                 Authorization: `Bearer ${getState().auth.Token}`
             },
         });
+        console.log(res.data.meta)
         dispatch(GetCart())
         dispatch(GettingCategories())
     } catch (error) {
@@ -211,8 +221,8 @@ export const OrderHistory = (id) => async (dispatch, getState) => {
         });
 
         dispatch({
-            type:MY_ORDERS,
-            payload:res.data.data
+            type: MY_ORDERS,
+            payload: res.data.data
         })
 
 

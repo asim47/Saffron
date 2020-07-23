@@ -19,6 +19,7 @@ import SplashScreen from 'react-native-splash-screen';
 import Animated from "react-native-reanimated"
 import MyOrders from './components/MyOrders/MyOrders';
 import ResetPassword from './components/ResetPassword/ResetPassword';
+import OrderDetails from './components/OrderDetails/OrderDetails';
 
 const Stack = createStackNavigator();
 
@@ -65,6 +66,7 @@ const Main = (props) => {
                             <Stack.Screen name="Payment" component={Payment} />
                             <Stack.Screen name="ReserveTable" component={ReserveTable} />
                             <Stack.Screen name="MyOrder" component={MyOrders} />
+                            <Stack.Screen name="OrderDetails" component={OrderDetails} />
                         </>
                     ) : (
                             <>
