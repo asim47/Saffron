@@ -10,8 +10,10 @@ import * as Actions from "../../../store/Action"
 import PayPal from 'react-native-paypal-gateway';
 
 PayPal.initialize(PayPal.SANDBOX, "AWwiDoy5r3PPGaA4GEnGuJX3_iNsLiF_zYtZKkBrdNTTCvGybzCURusWuq-Q-8j_fLE454JT70Jp4yUE");
+
 let stripe_url = 'https://api.stripe.com/v1/'
 let secret_key = 'pk_test_Z97TI2xnKRJ8VrQq13VJlELA'
+
 const Payment = (props) => {
     const { navigate, openDrawer, goBack } = props.navigation;
     const {
@@ -101,7 +103,6 @@ const Payment = (props) => {
                 },
             })
 
-            console.log(`/api/placeorder?stripeToken=${token.data.id}&total=${totalPrice}&shipping_charges=${shipping_charges}&lang=${lang}&lat=${lat}&distance=${distance}&order_type=${order_type}&shipping_address=${address}&drop_location=${address}`)
             const res = await Axios.post(API_ENDPOINT + `/api/placeorder?stripeToken=${token.data.id}&total=${totalPrice}&shipping_charges=${shipping_charges}&lang=${lang}&lat=${lat}&distance=${distance}&order_type=${order_type}&shipping_address=${address}&drop_location=${address}`, null, {
                 headers: {
                     Authorization: `Bearer ${ApiToken}`
@@ -109,7 +110,6 @@ const Payment = (props) => {
             })
 
 
-            console.log(res.data, "Res")
             Alert.alert("Payment Successfull!")
             dispatch(Actions.GettingCategories())
             dispatch(Actions.OrderHistory())
@@ -207,23 +207,23 @@ const Payment = (props) => {
 
                 <ClickAbleByAsim
                     onPress={() => {
+                        console.log(IsHomeDelieveryType ? parseInt(Price.toFixed(2)) + 5 : Price.toFixed(2))
                         PayPal.pay({
-                            price: Price + 5,
+                            price: IsHomeDelieveryType ? (parseInt(Price.toFixed(2)) + 5).toString() : Price.toFixed(2).toString(),
                             currency: 'AED',
                             description: 'Payment for your order',
                         }).then(async confirm => {
-                            console.log(confirm)
 
 
 
-                            let totalPrice = Price
+                            let totalPrice = IsHomeDelieveryType ? parseInt(Price.toFixed(2)) + 5 : Price.toFixed(2)
                             let shipping_charges = 5;
                             let lang = UserPo.Long || "";
                             let lat = UserPo.Lat || "";
                             let distance = Distance;
                             let order_type = IsHomeDelieveryType ? "delievery" : "pickup"
                             let address = Profile.address1 || ""
-                    
+
                             const res = await Axios.post(API_ENDPOINT + `/api/placeorder?stripeToken=${""}&total=${totalPrice}&shipping_charges=${0}&lang=${""}&lat=${""}&distance=${0}&order_type=${order_type}&shipping_address=${""}&drop_location=${""}`, null, {
                                 headers: {
                                     Authorization: `Bearer ${ApiToken}`
@@ -233,8 +233,11 @@ const Payment = (props) => {
                             dispatch(Actions.GettingCategories())
                             dispatch(Actions.OrderHistory())
                             navigate("Home")
-                            
-                        }).catch(error => console.log(error));
+
+                        }).catch(error => {
+                            console.log(error)
+                            Alert.alert("Error","Expired key provided!")
+                        });
                     }}
                     style={{}}
                 >

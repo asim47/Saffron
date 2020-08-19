@@ -29,7 +29,6 @@ const ResetPassword = (props) => {
 
         try {
             const res = await Axios.post(API_ENDPOINT+`/api/changePassword?email=${Email}&password=${NewPassword}&password_confirmation=${ConfrimPassword}`)
-            console.log(res.data)
             Alert.alert("Password reset successfull!")
             setLoading(false)
             navigate("Login")

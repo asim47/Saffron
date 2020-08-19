@@ -32,12 +32,14 @@ const MyProfile = (props) => {
 
 
     const Profile = useSelector(({ auth }) => auth.Profile)
+
+
     useEffect(() => {
         dispatch(Actions.GettingUserProfile())
     }, [])
     useEffect(() => {
         if (Profile) {
-            setProfilePicture(Profile.image)
+            setProfilePicture(Profile.image ? "https://saffronclub.com.au/core/storage/app/" + Profile.image : Profile.online_link)
             setName(Profile.name)
             setEmail(Profile.email)
             setContactNo1(Profile.cell1)
@@ -101,7 +103,7 @@ const MyProfile = (props) => {
                                 <Image
                                     style={{ height: "80%",width:"80%",borderRadius:100 }}
                                     resizeMode="contain"
-                                    source={{ uri: "https://rest.technozone.com.pk/core/storage/app/" + ProfilePicture }}
+                                    source={{ uri: ProfilePicture }}
                                 />
                             ) : (
                                     <Image

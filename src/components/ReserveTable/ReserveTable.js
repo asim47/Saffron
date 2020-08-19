@@ -17,6 +17,7 @@ const ReserveTable = (props) => {
     const { navigate, openDrawer, goBack } = props.navigation;
 
     const dispatch = useDispatch()
+    const [DialogType, setDialogType] = useState("Extra") //Extra //Additional
 
     const [DialogOpen, setDialogOpen] = useState(false)
     const [Loadding, setLoadding] = useState(false)
@@ -327,7 +328,7 @@ const ReserveTable = (props) => {
                                 <View style={{ flex: .7, height: "100%" }}>
                                     <Image
                                         style={{ height: "100%", width: "100%" }}
-                                        source={{ uri: `https://rest.technozone.com.pk/core/storage/app/${value.image}` }}
+                                        source={{ uri: `https://saffronclub.com.au/core/storage/app/${value.image}` }}
                                     />
                                 </View>
                                 <View style={{ flex: 1, height: "100%", justifyContent: "center", alignItems: "center", }}>
@@ -384,7 +385,7 @@ const ReserveTable = (props) => {
                                 <View style={{ flex: .6, height: "100%" }}>
                                     <Image
                                         style={{ height: "100%", width: "100%" }}
-                                        source={{ uri: `https://rest.technozone.com.pk/core/storage/app/${value.image}` }}
+                                        source={{ uri: `https://saffronclub.com.au/core/storage/app/${value.image}` }}
                                     />
                                 </View>
                                 <View style={{ flex: 1, height: "100%", justifyContent: "center", padding: 5 }}>
@@ -402,12 +403,20 @@ const ReserveTable = (props) => {
                                         <ClickAbleByAsim
                                             onPress={() => {
                                                 if (!value.cart) {
-                                                    dispatch(Actions.AddProductToCart(value.id))
+                                                    // dispatch(Actions.AddProductToCart(value.id))
                                                     if (value.extra.length > 0) {
                                                         setSelectedItemToShowForExtraItem(value.id)
+                                                        setDialogType("Extra")
                                                         setExtraDiaogImage(value.image)
                                                         setDialogOpen(true)
                                                         setExtraDiaogName(value.name)
+                                                    }else{
+                                                        dispatch(Actions.AddProductToCart(value.id))
+                                                        setSelectedItemToShowForExtraItem(value.id)
+                                                        setDialogType("Additional")
+                                                        setExtraDiaogImage(value.image)
+                                                        setExtraDiaogName(value.name)
+                                                        setDialogOpen(true)
                                                     }
                                                 } else {
                                                     dispatch(Actions.RemoveProduct(value.id_cart))
@@ -444,6 +453,8 @@ const ReserveTable = (props) => {
                 ExtraItems={ExtraItems}
                 ExtraDiaogImage={ExtraDiaogImage}
                 ExtraDiaogName={ExtraDiaogName}
+                DialogType={DialogType}
+
             />
         </View>
     );

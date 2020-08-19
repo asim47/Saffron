@@ -18,15 +18,32 @@ const DrawerComponent = (props) => {
 
     return (
         <View style={{ flex: 1 }}>
-            <Image
-                style={{ height: 100, width: 100, margin: 10 }}
-                resizeMode="center"
-                source={require("../../assests/logo.png")}
-            />
+            {
+                Profile?.online_link ? (
+                    <Image
+                        style={{ height: 100, width: 100, margin: 10,borderRadius:1000 }}
+                        resizeMode="cover"
+                        source={{ uri: Profile.online_link }}
+                    />
+                ) : Profile?.image ? (
+                    <Image
+                        style={{ height: 100, width: 100, margin: 10,borderRadius:1000 }}
+                        resizeMode="cover"
+                        source={{ uri: "https://saffronclub.com.au/core/storage/app/" + Profile.image }}
+                    />
+                ) : (
+                            <Image
+                                style={{ height: 100, width: 100, margin: 10 }}
+                                resizeMode="center"
+                                source={require("../../assests/logo.png")}
+                            />
+                        )
+            }
+
 
             <Text style={{ margin: 10, fontWeight: "bold", fontSize: 16 }}>
                 Welcome, {Profile?.name}
-                </Text>
+            </Text>
 
             <ClickAbleByAsim onPress={() => {
                 navigate("Home")

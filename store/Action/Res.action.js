@@ -5,6 +5,7 @@ import moment from "moment"
 export const GETTING_CATEGORIES = "GETTING_CATEGORIES"
 export const GETTING_CART_DATA = "GETTING_CART_DATA"
 export const MY_ORDERS = "MY_ORDERS"
+export const GETTING_ADDITIONAL_ITEMS = "GETTING_ADDITIONAL_ITEMS"
 
 
 export const GettingCategories = () => async (dispatch, getState) => {
@@ -38,6 +39,7 @@ export const AddProductToCart = (id) => async (dispatch, getState) => {
         });
 
         dispatch(GettingCategories())
+        dispatch(GettingAdditionalItems())
     } catch (error) {
         console.log(error)
     }
@@ -60,15 +62,18 @@ export const RemoveProductFromCart = (id) => async (dispatch, getState) => {
 
 
 export const AddExtraItemToCart = (id) => async (dispatch, getState) => {
-
+    console.log(id)
     try {
         const res = await Axios.post(API_ENDPOINT + "/api/addExtraToCart?id=" + id, null, {
             headers: {
                 Authorization: `Bearer ${getState().auth.Token}`
             },
         });
+
+        console.log(res.data.meta)
         dispatch(GetCart())
         dispatch(GettingCategories())
+        dispatch(GettingAdditionalItems())
     } catch (error) {
         console.log(error)
     }
@@ -107,7 +112,7 @@ export const GetTables = (NoOfGuests, date, time, timeTo) => async (dispatch, ge
                 Authorization: `Bearer ${getState().auth.Token}`
             },
         });
- 
+
         if (res.data.meta.status == 200) {
             console.log(res.data.data)
             return res.data.data
@@ -168,6 +173,8 @@ export const RemoveQTY = (id) => async (dispatch, getState) => {
         });
         dispatch(GetCart())
         dispatch(GettingCategories())
+        dispatch(GettingAdditionalItems())
+        console.log(res.data,res.data.meta)
         return true
 
     } catch (error) {
@@ -186,6 +193,7 @@ export const RemoveProduct = (id) => async (dispatch, getState) => {
         });
         dispatch(GetCart())
         dispatch(GettingCategories())
+        dispatch(GettingAdditionalItems())
         return true
 
     } catch (error) {
@@ -201,7 +209,6 @@ export const IncreaseQTY = (id) => async (dispatch, getState) => {
                 Authorization: `Bearer ${getState().auth.Token}`
             },
         });
-        console.log(res.data.meta)
         dispatch(GetCart())
         dispatch(GettingCategories())
     } catch (error) {
@@ -230,4 +237,21 @@ export const OrderHistory = (id) => async (dispatch, getState) => {
         console.log(error)
     }
 
+}
+
+export const GettingAdditionalItems = () => async (dispatch, getState) => {
+
+    try {
+        const res = await Axios.post(API_ENDPOINT + "/api/aditional_items", null, {
+            headers: {
+                Authorization: `Bearer ${getState().auth.Token}`
+            },
+        })
+        dispatch({
+            type: GETTING_ADDITIONAL_ITEMS,
+            payload: res.data.data.products
+        })
+    } catch (error) {
+        console.log(error)
+    }
 }

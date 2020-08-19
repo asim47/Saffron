@@ -1,4 +1,4 @@
-export const API_ENDPOINT = "https://rest.technozone.com.pk" 
+export const API_ENDPOINT = "https://saffronclub.com.au" 
 
 
 

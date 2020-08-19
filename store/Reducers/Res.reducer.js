@@ -4,6 +4,7 @@ const initialState = {
     CategoriesData: null,
     CartData: null,
     MyOrders: [],
+    AdditionalItems: null
 
 };
 
@@ -26,7 +27,11 @@ export const ResReducer = (state = initialState, action) => {
                 ...state,
                 MyOrders: payload,
             }
-
+        case Actions.GETTING_ADDITIONAL_ITEMS:
+            return {
+                ...state,
+                AdditionalItems: payload,
+            }
         default:
             return state
     }

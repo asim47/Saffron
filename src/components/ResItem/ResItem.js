@@ -26,6 +26,7 @@ const ResItem = (props) => {
 
 
     const [DialogOpen, setDialogOpen] = useState(false)
+    const [DialogType, setDialogType] = useState("Extra") //Extra //Additional
     const [Items, setItems] = useState([])
     const [AllItems, setAllItems] = useState([])
     const [SelectedItemToShowForExtraItem, setSelectedItemToShowForExtraItem] = useState(0)
@@ -149,7 +150,7 @@ const ResItem = (props) => {
                                     <View style={{ flex: .6, height: "100%" }}>
                                         <Image
                                             style={{ height: "100%", width: "100%" }}
-                                            source={{ uri: `https://rest.technozone.com.pk/core/storage/app/${value.image}` }}
+                                            source={{ uri: `https://saffronclub.com.au/core/storage/app/${value.image}` }}
                                         />
                                     </View>
                                     <View style={{ flex: 1, height: "100%", justifyContent: "center", padding: 5 }}>
@@ -170,11 +171,17 @@ const ResItem = (props) => {
                                                    
                                                         if (value.extra.length > 0) {
                                                             setSelectedItemToShowForExtraItem(value.id)
+                                                            setDialogType("Extra")
                                                             setExtraDiaogImage(value.image)
                                                             setDialogOpen(true)
                                                             setExtraDiaogName(value.name)
                                                         }else{
                                                             dispatch(Actions.AddProductToCart(value.id))
+                                                            setSelectedItemToShowForExtraItem(value.id)
+                                                            setDialogType("Additional")
+                                                            setExtraDiaogImage(value.image)
+                                                            setExtraDiaogName(value.name)
+                                                            setDialogOpen(true)
                                                         }
                                                     } else {
                                                         dispatch(Actions.RemoveProduct(value.id_cart))
@@ -207,6 +214,7 @@ const ResItem = (props) => {
                     ExtraItems={ExtraItems}
                     ExtraDiaogImage={ExtraDiaogImage}
                     ExtraDiaogName={ExtraDiaogName}
+                    DialogType={DialogType}
                 />
             </ImageBackground>
         </View >

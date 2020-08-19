@@ -7,14 +7,13 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { useSelector, useDispatch } from "react-redux"
 import * as Actions from "../../../store/Action"
 const dummyData = [
+    require("../../../assests/saffronpic1.png"),
     require("../../../assests/pexels-photo-461198.jpeg"),
     require("../../../assests/pexels-photo-1640777.jpeg"),
+    require("../../../assests/saffronpic1.png"),
     require("../../../assests/pexels-photo-461198.jpeg"),
     require("../../../assests/pexels-photo-1640777.jpeg"),
-    require("../../../assests/pexels-photo-461198.jpeg"),
-    require("../../../assests/pexels-photo-1640777.jpeg"),
-    require("../../../assests/pexels-photo-461198.jpeg"),
-    require("../../../assests/pexels-photo-1640777.jpeg"),
+
 ]
 
 const Home = (props) => {
@@ -28,14 +27,15 @@ const Home = (props) => {
     const Token = useSelector(({ auth }) => auth.Token)
 
 
-    useEffect(()=>{
-        if(Token){
+    useEffect(() => {
+        if (Token) {
             dispatch(Actions.GettingUserProfile())
         }
-    },[Token])
-    
+    }, [Token])
+
     useEffect(() => {
         dispatch(Actions.GettingCategories())
+        dispatch(Actions.GettingAdditionalItems())
     }, [])
 
     const _renderItem = ({ item, index }) => {
@@ -173,7 +173,7 @@ const Home = (props) => {
                                     <View style={{ flex: .7, height: "100%" }}>
                                         <Image
                                             style={{ height: "100%", width: "100%" }}
-                                            source={{ uri: `https://rest.technozone.com.pk/core/storage/app/${value.image}` }}
+                                            source={{ uri: `https://saffronclub.com.au/core/storage/app/${value.image}` }}
                                         />
                                     </View>
                                     <View style={{ flex: 1, height: "100%", justifyContent: "center", alignItems: "center", }}>

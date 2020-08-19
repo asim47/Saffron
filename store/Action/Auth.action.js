@@ -51,12 +51,19 @@ export const LoginAction = (email, password, navigate) => async (dispatch, getSt
 
 export const LogoutAction = () => async (dispatch, getState) => {
 
-    dispatch({
-        type: LOGOUT,
-    })
-    await GoogleSignin.revokeAccess();
-    await GoogleSignin.signOut();
-    await AsyncStorage.clear()
+
+    try {
+        dispatch({
+            type: LOGOUT,
+        })
+
+
+        await GoogleSignin.revokeAccess();
+        await GoogleSignin.signOut();
+        await AsyncStorage.clear()
+    } catch (error) {
+        console.log(error)
+    }
 }
 
 
@@ -271,8 +278,17 @@ export const Files = () => async (dispatch, getState) => {
 export const SocialLogin = (data, provider, navigate) => async (dispatch, getState) => {
 
     try {
-        const res = await Axios.post(API_ENDPOINT + `/api/callback?provider=${provider}&id=${data.user.id}&email=${data.user.email}&device_token=${data.dataidToken}&name=${data.user.name}`);
+        // const res = await Axios.post(API_ENDPOINT + `/api/callback?provider=${provider}&id=${data.user.id}&email=${data.user.email}&device_token=${data.dataidToken}&name=${data.user.name}&profile=${data?.user?.profile || data?.user?.photo}`);
+        const res = await Axios.post(API_ENDPOINT + "/api/callback", {
+            provider: provider,
+            id: data.user.id,
+            email: data.user.email,
+            device_token: data.dataidToken || "dataidToken",
+            name: data.user.name,
+            profile: data?.user?.photo
 
+        })
+        console.log(res.data,"Asim")
         dispatch({
             type: LOGIN_ATTEMPT,
             payload: res.data?.data?.access_token

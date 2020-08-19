@@ -14,7 +14,6 @@ const MyOrders = (props) => {
 
     const MyOrder = useSelector(({ res }) => res.MyOrders)
 
-    console.log(MyOrder)
     useEffect(() => {
         dispatch(Actions.OrderHistory())
     }, [])

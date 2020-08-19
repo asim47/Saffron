@@ -41,7 +41,10 @@ const Cart = (props) => {
     })
 
     const CartData = useSelector(({ res }) => res.CartData)
+    const AdditionalItems = useSelector(({ res }) => res.AdditionalItems)
 
+
+    // console.log(AdditionalItems, "AdditionalItems")
 
     useEffect(() => {
         if (_map?.current) {
@@ -60,7 +63,7 @@ const Cart = (props) => {
 
     useEffect(() => {
         priceCalculator()
-    }, [CartData, ExtraItems])
+    }, [CartData, AdditionalItems])
     // useEffect(() => {
     //     if (CartData && CartData?.menu?.length != 0) {
     //         let Arr = []
@@ -93,12 +96,12 @@ const Cart = (props) => {
             price = price + ((value?.products?.price * (value.products.qty_cart || 1)) || 0)
         }
 
-        // for (const value of ExtraItems) {
-        //     if (value.cart) {
-        //         price = price + ((value.price * (value.qty_cart || 1)) || 0)
+        for (const value of AdditionalItems) {
+            if (value.cart) {
+                price = price + (value.price*value.qty_cart)
 
-        //     }
-        // }
+            }
+        }
 
         setPrice(price)
 
@@ -326,25 +329,25 @@ const Cart = (props) => {
                                     <Image
                                         resizeMode="cover"
                                         style={{ height: "100%", width: "100%" }}
-                                        source={{ uri: `https://rest.technozone.com.pk/core/storage/app/${value?.products?.image}` }}
+                                        source={{ uri: `https://saffronclub.com.au/core/storage/app/${value?.products?.image}` }}
                                     />
                                 </View>
                                 <View style={{ flex: 1, height: "100%", justifyContent: "center", padding: 5 }}>
                                     <Text style={{ color: "#871014", fontSize: 19, }}>
-                                    {value.products.name}
+                                        {value.products.name}
                                     </Text>
                                     <Text style={{ color: "#871014", fontSize: 17, }}>
                                         {value?.extra?.name}
                                     </Text>
                                     <Text style={{ color: "#871014", fontSize: 20, fontWeight: "bold", marginTop: 10 }}>
-                                        ${value.extra ?value.extra.price :value?.products?.price}
+                                        ${value.extra ? value.extra.price : value?.products?.price}
                                     </Text>
 
                                     <View style={{ height: 30, width: 100, borderRadius: 100, justifyContent: "center", alignItems: "center", borderWidth: .7, borderColor: "#871014", overflow: "hidden", flexDirection: "row", alignSelf: "flex-end" }}>
                                         <ClickAbleByAsim onPress={() => {
-                                            if(value.extra){
+                                            if (value.extra) {
                                                 dispatch(Actions.AddExtraItemToCart(value?.extra?.id))
-                                            }else{
+                                            } else {
                                                 dispatch(Actions.IncreaseQTY(value?.products?.id))
                                             }
                                         }} style={{ flex: 1, height: "100%", justifyContent: "center", alignItems: "center", backgroundColor: "#871014" }}>
@@ -365,8 +368,86 @@ const Cart = (props) => {
                         )
                     })
                 }
+                {
+                    AdditionalItems?.filter(x=>x.cart == true).length > 0 ? (
+                        <Text style={{ fontSize: 20, marginTop: 20, marginBottom: 0, color: "#871014", fontWeight: "bold" }}>
+                            Additional Item
+                        </Text>
+                    ) : null
+                }
+                {/* {
+                    AdditionalItems?.map((value, index) => {
+                        if (!value.cart) return null
+
+                        return (
+                            <>
 
 
+                                <View
+                                    // onPress={() => setDialogOpen(true)}
+                                    style={{
+                                        height: 150,
+                                        width: "90%",
+                                        justifyContent: "center",
+                                        alignItems: "center",
+                                        borderWidth: 1,
+                                        borderColor: "white",
+                                        marginTop: 30,
+                                        backgroundColor: "white", //rgba(0,0,0,.3)
+                                        elevation: 6,
+                                        borderRadius: 5,
+                                        flexDirection: "row",
+                                        overflow: "hidden"
+                                    }}
+                                >
+                                    <View style={{ flex: .6, height: "100%" }}>
+                                        <Image
+                                            style={{ height: "100%", width: "100%" }}
+                                            source={{ uri: `https://saffronclub.com.au/core/storage/app/${value.image}` }}
+                                        />
+                                    </View>
+                                    <View style={{ flex: 1, height: "100%", justifyContent: "center", padding: 5 }}>
+                                        <Text style={{ color: "#871014", fontSize: 22, }}>
+                                            {value.name}
+                                        </Text>
+                                        <Text style={{ color: "#871014", fontSize: 11, width: "90%", marginTop: 5, marginBottom: 5 }}>
+                                            {value.desc}
+                                        </Text>
+                                        <View style={{ flexDirection: "row", width: "100%", justifyContent: "space-between" }}>
+                                            <Text style={{ color: "#871014", fontSize: 22, }}>
+                                                ${value.price}
+                                            </Text>
+
+                                            <ClickAbleByAsim
+                                                onPress={() => {
+                                                    if (!value.cart) {
+
+                                                        dispatch(Actions.AddProductToCart(value.id))
+
+                                                    } else {
+                                                        console.log(value.id_cart)
+                                                        dispatch(Actions.RemoveProduct(value.id_cart))
+                                                    }
+                                                }}
+                                                style={{ height: 30, width: 100, backgroundColor: "#4A8387", borderRadius: 100, justifyContent: "center", alignItems: "center", }}
+                                            >
+                                                <Text style={{ color: "white" }}>
+
+                                                    {
+                                                        value.cart ? "Remove" : "Add"
+                                                    }
+                                                </Text>
+                                            </ClickAbleByAsim>
+                                        </View>
+
+                                    </View>
+
+                                </View>
+
+                            </>
+                        )
+                    })
+                } */}
 
                 {/* {
                     ExtraItems.length > 0 ? (
@@ -376,8 +457,8 @@ const Cart = (props) => {
                     ) : null
                 } */}
 
-                {/* {
-                    ExtraItems?.map((value) => {
+                {
+                    AdditionalItems?.map((value) => {
                         if (!value.cart) return null
                         return (
                             <View
@@ -403,7 +484,13 @@ const Cart = (props) => {
                                 >
                                     <Text style={{ color: "white", fontWeight: "bold", fontSize: 14 }}>X</Text>
                                 </ClickAbleByAsim>
-
+                                <View style={{ flex: .6, height: "100%" }}>
+                                    <Image
+                                        resizeMode="cover"
+                                        style={{ height: "100%", width: "100%" }}
+                                        source={{ uri: `https://saffronclub.com.au/core/storage/app/${value.image}` }}
+                                    />
+                                </View>
                                 <View style={{ flex: 1, height: "100%", justifyContent: "center", padding: 5 }}>
                                     <Text style={{ color: "#871014", fontSize: 22, }}>
                                         {value?.name}
@@ -414,7 +501,7 @@ const Cart = (props) => {
 
                                     <View style={{ height: 30, width: 100, borderRadius: 100, justifyContent: "center", alignItems: "center", borderWidth: .7, borderColor: "#871014", overflow: "hidden", flexDirection: "row", alignSelf: "flex-end" }}>
                                         <ClickAbleByAsim onPress={() => {
-                                            dispatch(Actions.AddExtraItemToCart(value?.id))
+                                             dispatch(Actions.AddProductToCart(value.id))
                                         }} style={{ flex: 1, height: "100%", justifyContent: "center", alignItems: "center", backgroundColor: "#871014" }}>
                                             <Text style={{ fontSize: 20, color: "white" }}>+</Text>
                                         </ClickAbleByAsim>
@@ -432,7 +519,7 @@ const Cart = (props) => {
                             </View>
                         )
                     })
-                } */}
+                }
                 <Text style={{ fontSize: 20, marginTop: 20, marginBottom: 20, color: "#871014", fontWeight: "bold" }}>
                     Delievery Type
                 </Text>
@@ -569,7 +656,7 @@ const Cart = (props) => {
                     </View>
                     <View style={{ flex: 1, height: "100%", justifyContent: "center", alignItems: "center" }}>
                         <Text style={{ fontWeight: "bold", fontSize: 22, color: "#871014" }}>
-                            ${IsHomeDelieveryType ? Math.floor(Price + 5) : Math.ceil(Price)}
+                            ${IsHomeDelieveryType ? parseInt(Price.toFixed(2)) + 5 : Price.toFixed(2)}
                         </Text>
                     </View>
 

@@ -13,7 +13,6 @@ const OrderDetails = (props) => {
 
     const dispatch = useDispatch()
 
-    console.log(data)
 
     return (
         <View style={{ backgroundColor: "white", flex: 1 }}>
@@ -93,7 +92,6 @@ const OrderDetails = (props) => {
                 }
                 {
                     data?.menu_detail?.map((value) => {
-                        console.log(value, "Asim")
                         return (
                             <View
                                 style={{
@@ -115,7 +113,7 @@ const OrderDetails = (props) => {
                                     <Image
                                         resizeMode="cover"
                                         style={{ height: "100%", width: "100%" }}
-                                        source={{ uri: `https://rest.technozone.com.pk/core/storage/app/${value?.product?.image}` }}
+                                        source={{ uri: `https://saffronclub.com.au/core/storage/app/${value?.product?.image}` }}
                                     />
                                 </View>
                                 <View style={{ flex: 1, height: "100%", justifyContent: "center", padding: 5 }}>

@@ -62,15 +62,15 @@ const Login = (props) => {
             }
 
             const data = await AccessToken.getCurrentAccessToken()
-            // console.log(data.accessToken)
 
-            const UserData = await Axios.get(`https://graph.facebook.com/v2.5/me?fields=email,name&access_token=${data.accessToken}`)
+            const UserData = await Axios.get(`https://graph.facebook.com/v2.5/me?fields=email,name,picture&access_token=${data.accessToken}`)
 
             const UserData2 = {
                 user: {
                     id: UserData.data.id,
                     email: UserData.data.email,
                     name: UserData.data.name,
+                    photo: UserData.data.picture.data.url
                 },
                 dataidToken: data.accessToken
             }
@@ -90,7 +90,6 @@ const Login = (props) => {
             setLoading(true)
             await GoogleSignin.hasPlayServices();
             const userInfo = await GoogleSignin.signIn();
-            // console.log(userInfo)
             dispatch(Actions.SocialLogin(userInfo, "google", navigate))
         } catch (error) {
             setLoading(false)
