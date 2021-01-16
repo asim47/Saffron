@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { View, Text, Dimensions, Image, StyleSheet, ImageBackground, Alert, ScrollView, ActivityIndicator } from 'react-native'
+import { View, Text, Dimensions, Image, StyleSheet, ImageBackground, Alert, ScrollView, ActivityIndicator, FlatList } from 'react-native'
 import ClickAbleByAsim from '../../comman/ClickAbleByAsim';
 import AntDesign from "react-native-vector-icons/AntDesign"
 // import { ScrollView } from 'react-native-gesture-handler';
@@ -23,9 +23,9 @@ const ReserveTable = (props) => {
     const [Loadding, setLoadding] = useState(false)
     const [index, setIndex] = React.useState(0);
     const [TimeIndex, setTimeIndex] = React.useState(0);
-    const [date, setDate] = useState(new Date());
-    const [time, setTime] = useState(new Date());
-    const [timeTo, setTimeTo] = useState(new Date());
+    const [date, setDate] = useState(new Date().setDate(new Date().getDate() + 1));
+    const [time, setTime] = useState(new Date("2015-03-25T05:00:00Z"));
+    const [timeTo, setTimeTo] = useState(new Date("2015-03-25T10:00:00Z"));
     const [NoOfGuests, setNoOfGuests] = useState("");
     const [mode, setMode] = useState('date'); //date //time
     const [show, setShow] = useState(false);
@@ -359,93 +359,95 @@ const ReserveTable = (props) => {
             <Text style={{ fontSize: 20, marginTop: 20, marginBottom: 20, color: "#871014", fontWeight: "bold" }}>
                 Choose Menu
             </Text>
-            <ScrollView style={{ width: "100%" }} contentContainerStyle={{ alignItems: "center" }} >
-
-                {/* <View style={{ width: "100%", flexDirection: "row", flexWrap: "wrap",alignItems:"center",bac }}> */}
-                {
-                    ResItems?.map((value, index) => {
+            <View
+                style={{ width: "100%", justifyContent: "center", alignItems: "center", }}
+            // contentContainerStyle={{ justifyContent: "center", alignItems: "center" }}
+            >
+                <FlatList
+                    ListFooterComponent={<View />}
+                    ListFooterComponentStyle={{ height: 100 }}
+                    data={ResItems}
+                    renderItem={({ item }) => {
                         return (
-                            <ClickAbleByAsim
-                                onPress={() => { }}
-                                style={{
-                                    height: 150,
-                                    width: "90%",
-                                    justifyContent: "center",
-                                    alignItems: "center",
-                                    borderWidth: 1,
-                                    borderColor: "white",
-                                    marginTop: 30,
-                                    backgroundColor: "white", //rgba(0,0,0,.3)
-                                    elevation: 6,
-                                    borderRadius: 5,
-                                    flexDirection: "row",
-                                    overflow: "hidden"
-                                }}
-                            >
-                                <View style={{ flex: .6, height: "100%" }}>
-                                    <Image
-                                        style={{ height: "100%", width: "100%" }}
-                                        source={{ uri: `https://saffronclub.com.au/core/storage/app/${value.image}` }}
-                                    />
-                                </View>
-                                <View style={{ flex: 1, height: "100%", justifyContent: "center", padding: 5 }}>
-                                    <Text style={{ color: "#871014", fontSize: 22, }}>
-                                        {value.name}
-                                    </Text>
-                                    <Text style={{ color: "#871014", fontSize: 11, width: "90%", marginTop: 5, marginBottom: 5 }}>
-                                        {value.desc}
-                                    </Text>
-                                    <View style={{ flexDirection: "row", width: "100%", justifyContent: "space-between" }}>
+                            (
+                                <View
+                                    // onPress={() => setDialogOpen(true)}
+                                    style={{
+                                        height: 150,
+                                        width: (90 / 100) * Dimensions.get("window").width,
+                                        justifyContent: "center",
+                                        alignItems: "center",
+                                        borderWidth: 1,
+                                        borderColor: "white",
+                                        marginTop: 30,
+                                        backgroundColor: "white", //rgba(0,0,0,.3)
+                                        elevation: 6,
+                                        borderRadius: 5,
+                                        flexDirection: "row",
+                                        overflow: "hidden"
+                                    }}
+                                >
+                                    <View style={{ flex: .6, height: "100%" }}>
+                                        <Image
+                                            style={{ height: "100%", width: "100%" }}
+                                            source={{ uri: `https://saffronclub.com.au/core/storage/app/${item.image}` }}
+                                        />
+                                    </View>
+                                    <View style={{ flex: 1, height: "100%", justifyContent: "center", padding: 5 }}>
                                         <Text style={{ color: "#871014", fontSize: 22, }}>
-                                            ${value.price}
+                                            {item.name}
                                         </Text>
-
-                                        <ClickAbleByAsim
-                                            onPress={() => {
-                                                if (!value.cart) {
-                                                    // dispatch(Actions.AddProductToCart(value.id))
-                                                    if (value.extra.length > 0) {
-                                                        setSelectedItemToShowForExtraItem(value.id)
-                                                        setDialogType("Extra")
-                                                        setExtraDiaogImage(value.image)
-                                                        setDialogOpen(true)
-                                                        setExtraDiaogName(value.name)
-                                                    }else{
-                                                        dispatch(Actions.AddProductToCart(value.id))
-                                                        setSelectedItemToShowForExtraItem(value.id)
-                                                        setDialogType("Additional")
-                                                        setExtraDiaogImage(value.image)
-                                                        setExtraDiaogName(value.name)
-                                                        setDialogOpen(true)
-                                                    }
-                                                } else {
-                                                    dispatch(Actions.RemoveProduct(value.id_cart))
-                                                }
-                                            }}
-                                            style={{ height: 30, width: 100, backgroundColor: "#4A8387", borderRadius: 100, justifyContent: "center", alignItems: "center", }}
-                                        >
-                                            <Text style={{ color: "white" }}>
-                                                {
-                                                    value.cart ? "Remove" : "Add"
-                                                }
+                                        <Text style={{ color: "#871014", fontSize: 11, width: "90%", marginTop: 5, marginBottom: 5 }}>
+                                            {item.desc}
+                                        </Text>
+                                        <View style={{ flexDirection: "row", width: "100%", justifyContent: "space-between" }}>
+                                            <Text style={{ color: "#871014", fontSize: 22, }}>
+                                                ${item.price}
                                             </Text>
-                                        </ClickAbleByAsim>
+
+                                            <ClickAbleByAsim
+                                                onPress={() => {
+                                                    if (!item.cart) {
+                                                        // dispatch(Actions.AddProductToCart(item.id))
+                                                        if (item.extra.length > 0) {
+                                                            setSelectedItemToShowForExtraItem(item.id)
+                                                            setDialogType("Extra")
+                                                            setExtraDiaogImage(item.image)
+                                                            setDialogOpen(true)
+                                                            setExtraDiaogName(item.name)
+                                                        } else {
+                                                            dispatch(Actions.AddProductToCart(item.id))
+                                                            setSelectedItemToShowForExtraItem(item.id)
+                                                            setDialogType("Additional")
+                                                            setExtraDiaogImage(item.image)
+                                                            setExtraDiaogName(item.name)
+                                                            setDialogOpen(true)
+                                                        }
+                                                    } else {
+                                                        dispatch(Actions.RemoveProduct(item.id_cart))
+                                                    }
+                                                }}
+                                                style={{ height: 30, width: 100, backgroundColor: "#4A8387", borderRadius: 100, justifyContent: "center", alignItems: "center", }}
+                                            >
+                                                <Text style={{ color: "white" }}>
+                                                    {
+                                                        item.cart ? "Remove" : "Add"
+                                                    }
+                                                </Text>
+                                            </ClickAbleByAsim>
+                                        </View>
+
                                     </View>
 
                                 </View>
-
-                            </ClickAbleByAsim>
+                            )
                         )
-                    })
-                }
-                {/* </View> */}
-                <ClickAbleByAsim
-                    onPress={() => setIndex(0)}
-                    style={{ height: 50, width: 270, backgroundColor: "white", borderRadius: 100, justifyContent: "center", alignItems: "center", marginTop: 20 }}
-                >
-                    <Text style={{ color: "#871014", fontSize: 18 }}>BACK</Text>
-                </ClickAbleByAsim>
-            </ScrollView>
+                    }}
+                    keyExtractor={(item) => item.id}
+                />
+
+                {/* <View style={{height:50}} /> */}
+            </View>
             <ExtraItemsDialog
                 navigate={navigate}
                 open={DialogOpen}

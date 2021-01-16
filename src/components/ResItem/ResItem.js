@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react'
-import { View, Text, Dimensions, Image, StyleSheet, ImageBackground, TextInput, } from 'react-native'
+import { View, Text, Dimensions, Image, StyleSheet, ImageBackground, TextInput, FlatList } from 'react-native'
 import ClickAbleByAsim from '../../comman/ClickAbleByAsim';
 import AntDesign from "react-native-vector-icons/AntDesign"
 import { ScrollView } from 'react-native-gesture-handler';
 import ExtraItemsDialog from './ExtraItemsDialog';
 import { useSelector, useDispatch } from "react-redux"
 import * as Actions from "../../../store/Action"
+// import { Value } from 'react-native-reanimated';
 const dummyData = [
     require("../../../assests/pexels-photo-461198.jpeg"),
     require("../../../assests/pexels-photo-1640777.jpeg"),
@@ -43,7 +44,7 @@ const ResItem = (props) => {
         }
     }, [SelectedItemToShowForExtraItem, Data, UseLess])
 
-    useEffect(() => { 
+    useEffect(() => {
         if (id) {
             setItems(Data.filter(x => x.id == id)[0].products)
             setAllItems(Data.filter(x => x.id == id)[0].products)
@@ -123,90 +124,98 @@ const ResItem = (props) => {
                 </View>
 
 
-                <ScrollView
-                    style={{ width: "100%", }}
-                    contentContainerStyle={{ justifyContent: "center", alignItems: "center" }}
+                <View
+                    style={{ width: "100%", justifyContent: "center", alignItems: "center", }}
+                // contentContainerStyle={{ justifyContent: "center", alignItems: "center" }}
                 >
-                    {
-                        Items?.map((value) => {
+                    <FlatList
+                    ListFooterComponent={<View />}
+                    ListFooterComponentStyle={{height:100}}
+                        data={Items}
+                        renderItem={({ item }) => {
                             return (
-                                <View
-                                    // onPress={() => setDialogOpen(true)}
-                                    style={{
-                                        height: 150,
-                                        width: "90%",
-                                        justifyContent: "center",
-                                        alignItems: "center",
-                                        borderWidth: 1,
-                                        borderColor: "white",
-                                        marginTop: 30,
-                                        backgroundColor: "rgba(0,0,0,.3)", //rgba(0,0,0,.3)
-                                        elevation: 6,
-                                        borderRadius: 5,
-                                        flexDirection: "row",
-                                        overflow: "hidden"
-                                    }}
-                                >
-                                    <View style={{ flex: .6, height: "100%" }}>
-                                        <Image
-                                            style={{ height: "100%", width: "100%" }}
-                                            source={{ uri: `https://saffronclub.com.au/core/storage/app/${value.image}` }}
-                                        />
-                                    </View>
-                                    <View style={{ flex: 1, height: "100%", justifyContent: "center", padding: 5 }}>
-                                        <Text style={{ color: "white", fontSize: 22, }}>
-                                            {value.name}
-                                        </Text>
-                                        <Text style={{ color: "white", fontSize: 11, width: "90%", marginTop: 5, marginBottom: 5 }}>
-                                            {value.desc}
-                                        </Text>
-                                        <View style={{ flexDirection: "row", width: "100%", justifyContent: "space-between" }}>
+
+
+                                (
+                                    <View
+                                        // onPress={() => setDialogOpen(true)}
+                                        style={{
+                                            height: 150,
+                                            width: (90 / 100) * Dimensions.get("window").width,
+                                            justifyContent: "center",
+                                            alignItems: "center",
+                                            borderWidth: 1,
+                                            borderColor: "white",
+                                            marginTop: 30,
+                                            backgroundColor: "rgba(0,0,0,.3)", //rgba(0,0,0,.3)
+                                            elevation: 6,
+                                            borderRadius: 5,
+                                            flexDirection: "row",
+                                            overflow: "hidden"
+                                        }}
+                                    >
+                                        <View style={{ flex: .6, height: "100%" }}>
+                                            <Image
+                                                style={{ height: "100%", width: "100%" }}
+                                                source={{ uri: `https://saffronclub.com.au/core/storage/app/${item.image}` }}
+                                            />
+                                        </View>
+                                        <View style={{ flex: 1, height: "100%", justifyContent: "center", padding: 5 }}>
                                             <Text style={{ color: "white", fontSize: 22, }}>
-                                                ${value.price}
+                                                {item.name}
                                             </Text>
-
-                                            <ClickAbleByAsim
-                                                onPress={() => {
-                                                    if (!value.cart) {
-                                                   
-                                                        if (value.extra.length > 0) {
-                                                            setSelectedItemToShowForExtraItem(value.id)
-                                                            setDialogType("Extra")
-                                                            setExtraDiaogImage(value.image)
-                                                            setDialogOpen(true)
-                                                            setExtraDiaogName(value.name)
-                                                        }else{
-                                                            dispatch(Actions.AddProductToCart(value.id))
-                                                            setSelectedItemToShowForExtraItem(value.id)
-                                                            setDialogType("Additional")
-                                                            setExtraDiaogImage(value.image)
-                                                            setExtraDiaogName(value.name)
-                                                            setDialogOpen(true)
-                                                        }
-                                                    } else {
-                                                        dispatch(Actions.RemoveProduct(value.id_cart))
-                                                    }
-                                                }}
-                                                style={{ height: 30, width: 100, backgroundColor: "#4A8387", borderRadius: 100, justifyContent: "center", alignItems: "center", }}
-                                            >
-                                                <Text style={{ color: "white" }}>
-
-                                                    {
-                                                        value.cart ? "Remove" : "Add"
-                                                    }
+                                            <Text style={{ color: "white", fontSize: 11, width: "90%", marginTop: 5, marginBottom: 5 }}>
+                                                {item.desc}
+                                            </Text>
+                                            <View style={{ flexDirection: "row", width: "100%", justifyContent: "space-between" }}>
+                                                <Text style={{ color: "white", fontSize: 22, }}>
+                                                    ${item.price}
                                                 </Text>
-                                            </ClickAbleByAsim>
+
+                                                <ClickAbleByAsim
+                                                    onPress={() => {
+                                                        if (!item.cart) {
+
+                                                            if (item.extra.length > 0) {
+                                                                setSelectedItemToShowForExtraItem(item.id)
+                                                                setDialogType("Extra")
+                                                                setExtraDiaogImage(item.image)
+                                                                setDialogOpen(true)
+                                                                setExtraDiaogName(item.name)
+                                                            } else {
+                                                                dispatch(Actions.AddProductToCart(item.id))
+                                                                setSelectedItemToShowForExtraItem(item.id)
+                                                                setDialogType("Additional")
+                                                                setExtraDiaogImage(item.image)
+                                                                setExtraDiaogName(item.name)
+                                                                setDialogOpen(true)
+                                                            }
+                                                        } else {
+                                                            dispatch(Actions.RemoveProduct(item.id_cart))
+                                                        }
+                                                    }}
+                                                    style={{ height: 30, width: 100, backgroundColor: "#4A8387", borderRadius: 100, justifyContent: "center", alignItems: "center", }}
+                                                >
+                                                    <Text style={{ color: "white" }}>
+
+                                                        {
+                                                            item.cart ? "Remove" : "Add"
+                                                        }
+                                                    </Text>
+                                                </ClickAbleByAsim>
+                                            </View>
+
                                         </View>
 
                                     </View>
-
-                                </View>
+                                )
                             )
-                        })
-                    }
+                        }}
+                        keyExtractor={(item) => item.id}
+                    />
 
-                    <View style={{height:50}} />
-                </ScrollView>
+                    {/* <View style={{height:50}} /> */}
+                </View>
                 <ExtraItemsDialog
                     navigate={navigate}
                     open={DialogOpen}

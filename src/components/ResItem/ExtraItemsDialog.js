@@ -93,8 +93,8 @@ const ExtraItemsDialog = (props) => {
 
                                                         <View style={{ flexDirection: "row", width: "100%", justifyContent: "space-between" }}>
                                                             <Text style={{ color: "#871014", fontSize: 20, fontWeight: "bold" }}>
-                                                                $ 16
-                                            </Text>
+                                                                ${value.price}
+                                                            </Text>
 
                                                             <ClickAbleByAsim
                                                                 onPress={() => {

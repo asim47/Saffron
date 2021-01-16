@@ -6,14 +6,10 @@ import Carousel, { Pagination } from 'react-native-snap-carousel';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useSelector, useDispatch } from "react-redux"
 import * as Actions from "../../../store/Action"
+
 const dummyData = [
     require("../../../assests/saffronpic1.png"),
-    require("../../../assests/pexels-photo-461198.jpeg"),
-    require("../../../assests/pexels-photo-1640777.jpeg"),
     require("../../../assests/saffronpic1.png"),
-    require("../../../assests/pexels-photo-461198.jpeg"),
-    require("../../../assests/pexels-photo-1640777.jpeg"),
-
 ]
 
 const Home = (props) => {
@@ -156,8 +152,8 @@ const Home = (props) => {
                                     key={value.id}
                                     onPress={() => navigate("ResItem", { id: value.id, name: value.name })}
                                     style={{
-                                        height: 120,
-                                        width: "90%",
+                                        height: 150,
+                                        width: 150,
                                         justifyContent: "center",
                                         alignItems: "center",
                                         borderWidth: 1,
@@ -170,18 +166,18 @@ const Home = (props) => {
                                         overflow: "hidden"
                                     }}
                                 >
-                                    <View style={{ flex: .7, height: "100%" }}>
+                                    <View style={{ flex: 1, height: "100%" }}>
                                         <Image
                                             style={{ height: "100%", width: "100%" }}
                                             source={{ uri: `https://saffronclub.com.au/core/storage/app/${value.image}` }}
                                         />
                                     </View>
-                                    <View style={{ flex: 1, height: "100%", justifyContent: "center", alignItems: "center", }}>
+                                    {/* <View style={{ flex: 1, height: "100%", justifyContent: "center", alignItems: "center", }}>
                                         <Text style={{ color: "white", fontSize: 22, }}>
                                             {value.name}
                                         </Text>
 
-                                    </View>
+                                    </View> */}
 
                                 </ClickAbleByAsim>
                             )

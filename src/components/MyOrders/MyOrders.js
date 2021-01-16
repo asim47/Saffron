@@ -11,11 +11,14 @@ const MyOrders = (props) => {
 
     const dispatch = useDispatch()
 
+    const [Loading, setLoading] = useState(true)
 
     const MyOrder = useSelector(({ res }) => res.MyOrders)
 
     useEffect(() => {
-        dispatch(Actions.OrderHistory())
+        dispatch(Actions.OrderHistory()).then(() => {
+            setLoading(false)
+        })
     }, [])
 
     return (
@@ -51,53 +54,63 @@ const MyOrders = (props) => {
             {/* Navbar */}
 
             {
-                MyOrder.length == 0 ? (
+                Loading ? (
                     <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
                         <ActivityIndicator style={{ marginTop: -100 }} size={35} color="#871014" />
                     </View>
                 ) : (
-                        <ScrollView contentContainerStyle={{ alignItems: "center", paddingTop: 20, paddingBottom: 20 }}>
+                        <>
                             {
-                                MyOrder.map((value, index) => {
-                                    return (
-                                        <ClickAbleByAsim
-                                            onPress={() => {
-                                                navigate("OrderDetails", { data: value })
-                                            }}
-                                            style={{ height: 100, width: "90%", borderRadius: 20, backgroundColor: "white", elevation: 6, marginBottom: 10, flexDirection: "row" }}>
-                                            <View style={{ height: "100%", width: 30, justifyContent: "center", alignItems: "center" }}>
-                                                <Text>
-                                                    {index + 1})
+                                MyOrder.length == 0 ? (
+                                    <>
+                                    <Text style={{textAlign:"center",marginTop:50,fontSize:19,color:"grey"}}>No orders found</Text>
+                                    </>
+                                ) : null
+                            }
+                            <ScrollView contentContainerStyle={{ alignItems: "center", paddingTop: 20, paddingBottom: 20 }}>
+                                {
+                                    MyOrder.map((value, index) => {
+                                        return (
+                                            <ClickAbleByAsim
+                                                onPress={() => {
+                                                    navigate("OrderDetails", { data: value })
+                                                }}
+                                                style={{ height: 100, width: "90%", borderRadius: 20, backgroundColor: "white", elevation: 6, marginBottom: 10, flexDirection: "row" }}>
+                                                <View style={{ height: "100%", width: 30, justifyContent: "center", alignItems: "center" }}>
+                                                    <Text>
+                                                        {index + 1})
                                                 </Text>
-                                            </View>
-                                            <View style={{ flex: 1.1, justifyContent: "center" }}>
-                                                <Text>
-                                                    Order ID: {value.id}
+                                                </View>
+                                                <View style={{ flex: 1.1, justifyContent: "center" }}>
+                                                    <Text>
+                                                        Order ID: {value.id}
+                                                    </Text>
+                                                    <Text>
+                                                        Order Date:
                                                 </Text>
-                                                <Text>
-                                                    Order Date:
-                                                </Text>
-                                                <Text>
-                                                    Order Status: pending
+                                                    <Text>
+                                                        Order Status: pending
                                                 </Text>
 
-                                            </View>
-                                            <View style={{ flex: 1, justifyContent: "center", paddingLeft: 20 }}>
-                                                <Text>
-                                                    Products: {value.menu_detail.length}
-                                                </Text>
-                                                <Text>
-                                                    Total: {Math.ceil(value.total)}
-                                                </Text>
-                                                <Text>
-                                                    Paid Via: {value.payment_method}
-                                                </Text>
-                                            </View>
-                                        </ClickAbleByAsim>
-                                    )
-                                })
-                            }
-                        </ScrollView>
+                                                </View>
+                                                <View style={{ flex: 1, justifyContent: "center", paddingLeft: 20 }}>
+                                                    <Text>
+                                                        Products: {value.menu_detail.length}
+                                                    </Text>
+                                                    <Text>
+                                                        Total: {Math.ceil(value.total)}
+                                                    </Text>
+                                                    <Text>
+                                                        Paid Via: {value.payment_method}
+                                                    </Text>
+                                                </View>
+                                            </ClickAbleByAsim>
+                                        )
+                                    })
+                                }
+                            </ScrollView>
+
+                        </>
                     )
             }
 
