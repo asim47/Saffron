@@ -62,7 +62,6 @@ export const RemoveProductFromCart = (id) => async (dispatch, getState) => {
 
 
 export const AddExtraItemToCart = (id) => async (dispatch, getState) => {
-    console.log(id)
     try {
         const res = await Axios.post(API_ENDPOINT + "/api/addExtraToCart?id=" + id, null, {
             headers: {
@@ -70,7 +69,6 @@ export const AddExtraItemToCart = (id) => async (dispatch, getState) => {
             },
         });
 
-        console.log(res.data.meta)
         dispatch(GetCart())
         dispatch(GettingCategories())
         dispatch(GettingAdditionalItems())
@@ -114,7 +112,6 @@ export const GetTables = (NoOfGuests, date, time, timeTo) => async (dispatch, ge
         });
 
         if (res.data.meta.status == 200) {
-            console.log(res.data.data)
             return res.data.data
 
         } else {
@@ -136,7 +133,6 @@ export const AddTables = (id, persons, time, date, get) => async (dispatch, getS
             },
         });
 
-        console.log(res.data)
         // return res.data.data
 
     } catch (error) {
@@ -202,7 +198,6 @@ export const RemoveProduct = (id) => async (dispatch, getState) => {
 }
 
 export const IncreaseQTY = (id) => async (dispatch, getState) => {
-    console.log(id)
     try {
         const res = await Axios.post(API_ENDPOINT + "/api/addToCart?id=" + id, null, {
             headers: {
@@ -226,7 +221,7 @@ export const OrderHistory = (id) => async (dispatch, getState) => {
                 Authorization: `Bearer ${getState().auth.Token}`
             },
         });
-
+        console.log(res.data)
         dispatch({
             type: MY_ORDERS,
             payload: res.data.data

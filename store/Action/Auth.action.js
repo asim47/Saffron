@@ -57,10 +57,9 @@ export const LogoutAction = () => async (dispatch, getState) => {
             type: LOGOUT,
         })
 
-
+        await AsyncStorage.clear()
         await GoogleSignin.revokeAccess();
         await GoogleSignin.signOut();
-        await AsyncStorage.clear()
     } catch (error) {
         console.log(error)
     }
@@ -288,7 +287,6 @@ export const SocialLogin = (data, provider, navigate) => async (dispatch, getSta
             profile: data?.user?.photo
 
         })
-        console.log(res.data,"Asim")
         dispatch({
             type: LOGIN_ATTEMPT,
             payload: res.data?.data?.access_token

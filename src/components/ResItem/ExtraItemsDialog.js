@@ -168,7 +168,6 @@ const ExtraItemsDialog = (props) => {
                                                                             dispatch(Actions.AddProductToCart(value.id))
 
                                                                         } else {
-                                                                            console.log(value.id_cart)
                                                                             dispatch(Actions.RemoveProduct(value.id_cart))
                                                                         }
                                                                     }}

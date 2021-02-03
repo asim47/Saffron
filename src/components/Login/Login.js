@@ -55,14 +55,13 @@ const Login = (props) => {
     const FacebookLogin = async () => {
         try {
             setLoading(true)
+
             const result = await LoginManager.logInWithPermissions(["email", "public_profile",]);
             if (result.isCancelled) {
                 setLoading(false)
                 return console.log("Login cancelled");
             }
-
             const data = await AccessToken.getCurrentAccessToken()
-
             const UserData = await Axios.get(`https://graph.facebook.com/v2.5/me?fields=email,name,picture&access_token=${data.accessToken}`)
 
             const UserData2 = {

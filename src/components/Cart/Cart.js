@@ -44,7 +44,6 @@ const Cart = (props) => {
     const AdditionalItems = useSelector(({ res }) => res.AdditionalItems)
 
 
-    // console.log(AdditionalItems, "AdditionalItems")
 
     useEffect(() => {
         if (_map?.current) {

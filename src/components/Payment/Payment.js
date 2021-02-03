@@ -12,7 +12,7 @@ import PayPal from 'react-native-paypal-gateway';
 PayPal.initialize(PayPal.SANDBOX, "AWwiDoy5r3PPGaA4GEnGuJX3_iNsLiF_zYtZKkBrdNTTCvGybzCURusWuq-Q-8j_fLE454JT70Jp4yUE");
 
 let stripe_url = 'https://api.stripe.com/v1/'
-let secret_key = 'pk_test_Z97TI2xnKRJ8VrQq13VJlELA'
+let secret_key = 'pk_live_51HkOE8IBZjK7c5TEX7TCGtcsDGoEc8ht8dHm1ClcCHMR8rJW4zm1xvU1yZ3VYQWAEX4wNjOiL5Ya5Y4z3nmHay5S00s9YLR4nh'
 
 const Payment = (props) => {
     const { navigate, openDrawer, goBack } = props.navigation;
@@ -94,7 +94,7 @@ const Payment = (props) => {
                 formBody.push(encodedKey + "=" + encodedValue);
             }
             formBody = formBody.join("&");
-
+            console.log("Making payment on stripe")
             const token = await Axios.post(stripe_url + "tokens", formBody, {
                 headers: {
                     'Accept': 'application/json',
@@ -102,13 +102,19 @@ const Payment = (props) => {
                     'Authorization': 'Bearer ' + secret_key
                 },
             })
+            console.log("Payment done")
+            console.log({
+                "token.data.id": token.data.id,
+                ApiToken: ApiToken
 
+            })
             const res = await Axios.post(API_ENDPOINT + `/api/placeorder?stripeToken=${token.data.id}&total=${totalPrice}&shipping_charges=${shipping_charges}&lang=${lang}&lat=${lat}&distance=${distance}&order_type=${order_type}&shipping_address=${address}&drop_location=${address}`, null, {
                 headers: {
                     Authorization: `Bearer ${ApiToken}`
                 },
             })
 
+            console.log("Error:asim ", res.data)
 
             Alert.alert("Payment Successfull!")
             dispatch(Actions.GettingCategories())
@@ -116,7 +122,7 @@ const Payment = (props) => {
             navigate("Home")
             setLoading(false)
         } catch (error) {
-            console.log(error)
+            console.log("Error:asim ", error)
             console.log(error.response.data.error.message)
             setErrorMsg(error.response.data.error.message)
             setLoading(false)
@@ -207,7 +213,6 @@ const Payment = (props) => {
 
                 <ClickAbleByAsim
                     onPress={() => {
-                        console.log(IsHomeDelieveryType ? parseInt(Price.toFixed(2)) + 5 : Price.toFixed(2))
                         PayPal.pay({
                             price: IsHomeDelieveryType ? (parseInt(Price.toFixed(2)) + 5).toString() : Price.toFixed(2).toString(),
                             currency: 'AED',
@@ -236,7 +241,7 @@ const Payment = (props) => {
 
                         }).catch(error => {
                             console.log(error)
-                            Alert.alert("Error","Expired key provided!")
+                            Alert.alert("Error", "Expired key provided!")
                         });
                     }}
                     style={{}}
