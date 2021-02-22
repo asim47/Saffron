@@ -1,18 +1,18 @@
 import React, { useState, useEffect } from 'react'
-import { View, Text, Dimensions, Image, StyleSheet, ImageBackground, Alert, ScrollView, ActivityIndicator, FlatList } from 'react-native'
+import { View, Text, Dimensions, Image, ScrollView, ActivityIndicator, FlatList, TextInput } from 'react-native'
 import ClickAbleByAsim from '../../comman/ClickAbleByAsim';
 import AntDesign from "react-native-vector-icons/AntDesign"
 // import { ScrollView } from 'react-native-gesture-handler';
-import { Item, Label, Input, Icon } from 'native-base';
+import { Item, Label, Icon, Input, } from 'native-base';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import moment from "moment"
-import { TabView, SceneMap } from 'react-native-tab-view';
+// import { TabView, SceneMap } from 'react-native-tab-view';
 import ExtraItemsDialog from '../ResItem/ExtraItemsDialog';
 import { useDispatch, useSelector } from "react-redux"
 import * as Actions from "../../../store/Action"
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
-const initialLayout = { width: Dimensions.get('window').width };
+// const initialLayout = { width: Dimensions.get('window').width };
 const ReserveTable = (props) => {
     const { navigate, openDrawer, goBack } = props.navigation;
 
@@ -23,7 +23,7 @@ const ReserveTable = (props) => {
     const [Loadding, setLoadding] = useState(false)
     const [index, setIndex] = React.useState(0);
     const [TimeIndex, setTimeIndex] = React.useState(0);
-    const [date, setDate] = useState(new Date().setDate(new Date().getDate() + 1));
+    const [date, setDate] = useState(new Date(new Date().setDate(new Date().getDate() + 1)));
     const [time, setTime] = useState(new Date("2015-03-25T05:00:00Z"));
     const [timeTo, setTimeTo] = useState(new Date("2015-03-25T10:00:00Z"));
     const [NoOfGuests, setNoOfGuests] = useState("");
@@ -37,15 +37,16 @@ const ReserveTable = (props) => {
     const [ExtraDiaogName, setExtraDiaogName] = useState("")
     const [UseLess, setUseLess] = useState(1)
     const [SelectedItemToShowForExtraItem, setSelectedItemToShowForExtraItem] = useState(0)
+    console.log(date)
 
     const [Tables, setTables] = useState([]);
 
-    const [routes] = React.useState([
-        { key: 'first', title: 'First' },
-        { key: 'second', title: 'Second' },
-        { key: 'Third', title: 'Third' },
-        { key: 'Forth', title: 'Forth' },
-    ]);
+    // const [routes] = React.useState([
+    //     { key: 'first', title: 'First' },
+    //     { key: 'second', title: 'Second' },
+    //     { key: 'Third', title: 'Third' },
+    //     { key: 'Forth', title: 'Forth' },
+    // ]);
 
 
     const CategoriesData = useSelector(({ res }) => res.CategoriesData)
@@ -53,6 +54,7 @@ const ReserveTable = (props) => {
 
     useEffect(() => {
         if (SelectedItemToShowForExtraItem) {
+            console.log("test")
             setExtraItems(ResItems.filter(x => x.id == SelectedItemToShowForExtraItem)[0].extra)
         }
     }, [SelectedItemToShowForExtraItem, ResItems, UseLess])
@@ -97,7 +99,6 @@ const ReserveTable = (props) => {
 
 
 
-
     const showMode = currentMode => {
         setShow(true);
         setMode(currentMode);
@@ -119,129 +120,11 @@ const ReserveTable = (props) => {
 
 
 
-    const FirstRoute = () => (
-        <View style={{ flex: 1, alignItems: "center" }}>
-            <KeyboardAwareScrollView style={{ width: "100%" }} contentContainerStyle={{ alignItems: "center" }} keyboardDismissMode="none" keyboardShouldPersistTaps="always">
-                <Text style={{ fontSize: 20, marginTop: 20, marginBottom: 20, color: "#871014", fontWeight: "bold" }}>
-                    Find Table
-                    </Text>
-
-                <Item style={{ width: "90%", marginTop: 30 }} floatingLabel>
-                    <Label >Number of guests</Label>
-                    <Input
-                        keyboardType="number-pad"
-                        value={NoOfGuests}
-                        onChangeText={e => setNoOfGuests(e)}
-                    />
-                    <Icon
-                        type="FontAwesome5"
-                        name="pen"
-                        style={{ color: "grey", fontSize: 16 }}
-                    />
-                </Item>
-
-                <Item style={{ width: "90%", marginTop: 30 }} floatingLabel>
-                    <Label >Date</Label>
-                    <Input
-                        value={moment(date).format("DD/MM/YYYY")}
-                        onFocus={showDatepicker}
-                    />
-                    <Icon
-                        onPress={showDatepicker}
-                        type="FontAwesome5"
-                        name="pen"
-                        style={{ color: "grey", fontSize: 16 }}
-                    />
-                </Item>
-
-                <Item style={{ width: "90%", marginTop: 30 }} floatingLabel>
-                    <Label >Time from </Label>
-                    <Input
-                        value={moment(time).format("h:mm a ")}
-                        onFocus={() => {
-                            setTimeIndex(0)
-                            showTimepicker()
-                        }}
-                    />
-                    <Icon
-                        onPress={() => {
-                            setTimeIndex(0)
-                            showTimepicker()
-                        }}
-                        type="FontAwesome5"
-                        name="pen"
-                        style={{ color: "grey", fontSize: 16 }}
-                    />
-                </Item>
-
-                <Item style={{ width: "90%", marginTop: 30 }} floatingLabel>
-                    <Label >Time To </Label>
-                    <Input
-                        value={moment(timeTo).format("h:mm a ")}
-                        onFocus={() => {
-                            setTimeIndex(1)
-                            showTimepicker()
-                        }}
-                    />
-                    <Icon
-                        onFocus={() => {
-                            setTimeIndex(1)
-                            showTimepicker()
-                        }}
-                        type="FontAwesome5"
-                        name="pen"
-                        style={{ color: "grey", fontSize: 16 }}
-                    />
-                </Item>
-                <Text style={{ color: "red", margin: 20 }}>
-                    {ErrorMsg}
-                </Text>
-                <ClickAbleByAsim
-                    onPress={() => {
-                        if (!NoOfGuests) return setErrorMsg("Please enter number of guests");
-                        setErrorMsg("")
-                        setLoadding(true)
-                        dispatch(Actions.GetTables(NoOfGuests, date, time, timeTo)).then((res) => {
-                            setLoadding(false)
-                            if (!res) {
-                                return setErrorMsg("Please choose a time between 09:00am and 02:00:am")
-                            }
-                            setTables(res)
-                            setIndex(1)
-
-                        })
-
-                    }}
-                    style={{ height: 50, width: 270, backgroundColor: "#871014", borderRadius: 100, justifyContent: "center", alignItems: "center", marginTop: 10 }}
-                >
-                    {
-                        Loadding ? <ActivityIndicator color="white" /> : <Text style={{ color: "white", fontSize: 18 }}>Find Table</Text>
-                    }
-
-                </ClickAbleByAsim>
-
-
-                <ClickAbleByAsim
-                    onPress={() => navigate("Home")}
-                    style={{ height: 50, width: 270, backgroundColor: "white", borderRadius: 100, justifyContent: "center", alignItems: "center", marginTop: 20 }}
-                >
-                    <Text style={{ color: "#871014", fontSize: 18 }}>CANCEL</Text>
-                </ClickAbleByAsim>
-                {show && (
-                    <DateTimePicker
-                        testID="dateTimePicker"
-                        value={mode === "date" ? date : time}
-                        mode={mode}
-                        minimumDate={new Date()}
-                        is24Hour={false}
-                        display="default"
-                        onChange={onChange}
-                    />
-                )}
-            </KeyboardAwareScrollView>
-        </View>
-
-    );
+    const FirstRoute = () => {
+        return (
+            <></>
+        )
+    }
 
     const SecondRoute = () => (
         <View style={{ flex: 1, alignItems: "center" }}>
@@ -271,6 +154,7 @@ const ReserveTable = (props) => {
 
                                     <ClickAbleByAsim
                                         onPress={() => {
+
                                             dispatch(Actions.AddTables(value.id, value.person, moment(time).format("H:m"), date.toISOString(), getTables))
                                             setIndex(2)
                                         }}
@@ -461,12 +345,12 @@ const ReserveTable = (props) => {
         </View>
     );
 
-    const renderScene = SceneMap({
-        first: FirstRoute,
-        second: SecondRoute,
-        Third: ThirdRoute,
-        Forth: ForthRoute,
-    });
+    // const renderScene = SceneMap({
+    //     first: FirstRoute,
+    //     second: SecondRoute,
+    //     Third: ThirdRoute,
+    //     Forth: ForthRoute,
+    // });
 
 
 
@@ -514,7 +398,127 @@ const ReserveTable = (props) => {
             {
                 index == 0
                     ? (
-                        <FirstRoute />
+                        <View style={{ flex: 1, alignItems: "center" }}>
+                            <KeyboardAwareScrollView style={{ width: "100%" }} contentContainerStyle={{ alignItems: "center" }} keyboardDismissMode="none" keyboardShouldPersistTaps="always">
+                                <Text style={{ fontSize: 20, marginTop: 20, marginBottom: 20, color: "#871014", fontWeight: "bold" }}>
+                                    Find Table
+                    </Text>
+
+                                <Item style={{ width: "90%", marginTop: 30 }} floatingLabel>
+                                    <Label >Number of guests</Label>
+                                    <Input
+                                        keyboardType="number-pad"
+                                        value={NoOfGuests}
+                                        onChangeText={e => setNoOfGuests(e)}
+                                        maxLength={3}
+                                    />
+                                    <Icon
+                                        type="FontAwesome5"
+                                        name="pen"
+                                        style={{ color: "grey", fontSize: 16 }}
+                                    />
+                                </Item>
+
+                                <Item style={{ width: "90%", marginTop: 30 }} floatingLabel>
+                                    <Label >Date</Label>
+                                    <Input
+                                        value={moment(date).format("DD/MM/YYYY")}
+                                        onFocus={showDatepicker}
+                                    />
+                                    <Icon
+                                        onPress={showDatepicker}
+                                        type="FontAwesome5"
+                                        name="pen"
+                                        style={{ color: "grey", fontSize: 16 }}
+                                    />
+                                </Item>
+
+                                <Item style={{ width: "90%", marginTop: 30 }} floatingLabel>
+                                    <Label >Time from </Label>
+                                    <Input
+                                        value={moment(time).format("h:mm a ")}
+                                        onFocus={() => {
+                                            setTimeIndex(0)
+                                            showTimepicker()
+                                        }}
+                                    />
+                                    <Icon
+                                        onPress={() => {
+                                            setTimeIndex(0)
+                                            showTimepicker()
+                                        }}
+                                        type="FontAwesome5"
+                                        name="pen"
+                                        style={{ color: "grey", fontSize: 16 }}
+                                    />
+                                </Item>
+
+                                <Item style={{ width: "90%", marginTop: 30 }} floatingLabel>
+                                    <Label >Time To </Label>
+                                    <Input
+                                        value={moment(timeTo).format("h:mm a ")}
+                                        onFocus={() => {
+                                            setTimeIndex(1)
+                                            showTimepicker()
+                                        }}
+                                    />
+                                    <Icon
+                                        onFocus={() => {
+                                            setTimeIndex(1)
+                                            showTimepicker()
+                                        }}
+                                        type="FontAwesome5"
+                                        name="pen"
+                                        style={{ color: "grey", fontSize: 16 }}
+                                    />
+                                </Item>
+                                <Text style={{ color: "red", margin: 20 }}>
+                                    {ErrorMsg}
+                                </Text>
+                                <ClickAbleByAsim
+                                    onPress={() => {
+                                        if (!NoOfGuests) return setErrorMsg("Please enter number of guests");
+                                        setErrorMsg("")
+                                        setLoadding(true)
+                                        dispatch(Actions.GetTables(NoOfGuests, date, time, timeTo)).then((res) => {
+                                            setLoadding(false)
+                                            if (!res) {
+                                                return setErrorMsg("Please choose a time between 09:00am and 02:00:am")
+                                            }
+                                            setTables(res)
+                                            setIndex(1)
+
+                                        })
+
+                                    }}
+                                    style={{ height: 50, width: 270, backgroundColor: "#871014", borderRadius: 100, justifyContent: "center", alignItems: "center", marginTop: 10 }}
+                                >
+                                    {
+                                        Loadding ? <ActivityIndicator color="white" /> : <Text style={{ color: "white", fontSize: 18 }}>Find Table</Text>
+                                    }
+
+                                </ClickAbleByAsim>
+
+
+                                <ClickAbleByAsim
+                                    onPress={() => navigate("Home")}
+                                    style={{ height: 50, width: 270, backgroundColor: "white", borderRadius: 100, justifyContent: "center", alignItems: "center", marginTop: 20 }}
+                                >
+                                    <Text style={{ color: "#871014", fontSize: 18 }}>CANCEL</Text>
+                                </ClickAbleByAsim>
+                                {show && (
+                                    <DateTimePicker
+                                        testID="dateTimePicker"
+                                        value={mode === "date" ? date : time}
+                                        mode={mode}
+                                        minimumDate={new Date()}
+                                        is24Hour={false}
+                                        display="default"
+                                        onChange={onChange}
+                                    />
+                                )}
+                            </KeyboardAwareScrollView>
+                        </View>
                     )
                     :
                     index == 1
