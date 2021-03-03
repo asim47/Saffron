@@ -661,7 +661,7 @@ const Cart = (props) => {
 
                 </View>
 
-
+                 
                 <ClickAbleByAsim
                     onPress={() => {
                         if (IsHomeDelieveryType) {

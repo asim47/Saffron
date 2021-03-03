@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { View, Text, Dimensions, Image, ScrollView, ActivityIndicator, FlatList, TextInput } from 'react-native'
+import { View, Text, Dimensions, Image, ScrollView, ActivityIndicator, FlatList, TextInput, Alert } from 'react-native'
 import ClickAbleByAsim from '../../comman/ClickAbleByAsim';
 import AntDesign from "react-native-vector-icons/AntDesign"
 // import { ScrollView } from 'react-native-gesture-handler';
@@ -20,6 +20,7 @@ const ReserveTable = (props) => {
     const [DialogType, setDialogType] = useState("Extra") //Extra //Additional
 
     const [DialogOpen, setDialogOpen] = useState(false)
+    const [IsNewError, setIsNewError] = useState(false)
     const [Loadding, setLoadding] = useState(false)
     const [index, setIndex] = React.useState(0);
     const [TimeIndex, setTimeIndex] = React.useState(0);
@@ -51,6 +52,10 @@ const ReserveTable = (props) => {
 
     const CategoriesData = useSelector(({ res }) => res.CategoriesData)
 
+
+    useEffect(()=>{
+        setIsNewError(false)
+    },[NoOfGuests,date,time,timeTo])
 
     useEffect(() => {
         if (SelectedItemToShowForExtraItem) {
@@ -154,9 +159,12 @@ const ReserveTable = (props) => {
 
                                     <ClickAbleByAsim
                                         onPress={() => {
-
-                                            dispatch(Actions.AddTables(value.id, value.person, moment(time).format("H:m"), date.toISOString(), getTables))
-                                            setIndex(2)
+                                            try {
+                                                dispatch(Actions.AddTables(value?.id, value?.person, moment(time)?.format("H:m"), date?.toISOString(), getTables))
+                                                setIndex(2)
+                                            } catch (error) {
+                                                Alert.alert(error)
+                                            }
                                         }}
                                         style={{ height: 30, width: 100, backgroundColor: "#871014", borderRadius: 100, justifyContent: "center", alignItems: "center", }}
                                     >
@@ -181,7 +189,7 @@ const ReserveTable = (props) => {
     const ThirdRoute = () => (
         <View style={{ flex: 1, alignItems: "center" }}>
             <Text style={{ fontSize: 20, marginTop: 20, marginBottom: 20, color: "#871014", fontWeight: "bold" }}>
-                Choose Resturant
+                Choose Menu
             </Text>
             <ScrollView style={{ width: "100%" }} contentContainerStyle={{ alignItems: "center" }}>
 
@@ -475,37 +483,66 @@ const ReserveTable = (props) => {
                                 <Text style={{ color: "red", margin: 20 }}>
                                     {ErrorMsg}
                                 </Text>
-                                <ClickAbleByAsim
-                                    onPress={() => {
-                                        if (!NoOfGuests) return setErrorMsg("Please enter number of guests");
-                                        setErrorMsg("")
-                                        setLoadding(true)
-                                        dispatch(Actions.GetTables(NoOfGuests, date, time, timeTo)).then((res) => {
-                                            setLoadding(false)
-                                            if (!res) {
-                                                return setErrorMsg("Please choose a time between 09:00am and 02:00:am")
-                                            }
-                                            setTables(res)
-                                            setIndex(1)
+                                {
+                                    NoOfGuests > 20 || IsNewError ? (
+                                       <>
+                                        <View style={{justifyContent:"center",alignItems:"center"}}>
+                                            <Text style={{textAlign:"center",width:300, marginBottom:10, color:"red"}}>
+                                               No Tables available for {NoOfGuests} people, Please contact Saffron Team for more information. 
+                                            </Text>
+                                            <Text style={{fontWeight:"bold",}}>
+                                                Email: Contact@saffronclub.com.au
+                                            </Text>
+                                            <Text style={{fontWeight:"bold",}}>
+                                                Phone No: +61 882 694 194
+                                            </Text>
+                                        </View>
+                                            <ClickAbleByAsim
+                                            onPress={() => navigate("Home")}
+                                            style={{ height: 50, width: 270, backgroundColor: "white", borderRadius: 100, justifyContent: "center", alignItems: "center", marginTop: 20 }}
+                                        >
+                                            <Text style={{ color: "#871014", fontSize: 18 }}>Go Back</Text>
+                                        </ClickAbleByAsim>
+                                       
+                                       </>
+                                    ) : (
+                                        <>
+                                            <ClickAbleByAsim
+                                                onPress={() => {
+                                                    if (!NoOfGuests) return setErrorMsg("Please enter number of guests");
+                                                    setErrorMsg("")
+                                                    setLoadding(true)
+                                                    dispatch(Actions.GetTables(NoOfGuests, date, time, timeTo)).then((res) => {
+                                                        setLoadding(false)
+                                                        if (!res) {
+                                                            return setErrorMsg("Please choose a time between 09:00am and 02:00:am")
+                                                        }
+                                                        console.log(res)
+                                                        if(res?.length == 0) return setIsNewError(true)
+                                                        setTables(res)
+                                                        setIndex(1)
 
-                                        })
+                                                    })
 
-                                    }}
-                                    style={{ height: 50, width: 270, backgroundColor: "#871014", borderRadius: 100, justifyContent: "center", alignItems: "center", marginTop: 10 }}
-                                >
-                                    {
-                                        Loadding ? <ActivityIndicator color="white" /> : <Text style={{ color: "white", fontSize: 18 }}>Find Table</Text>
-                                    }
+                                                }}
+                                                style={{ height: 50, width: 270, backgroundColor: "#871014", borderRadius: 100, justifyContent: "center", alignItems: "center", marginTop: 10 }}
+                                            >
+                                                {
+                                                    Loadding ? <ActivityIndicator color="white" /> : <Text style={{ color: "white", fontSize: 18 }}>Find Table</Text>
+                                                }
 
-                                </ClickAbleByAsim>
+                                            </ClickAbleByAsim>
 
 
-                                <ClickAbleByAsim
-                                    onPress={() => navigate("Home")}
-                                    style={{ height: 50, width: 270, backgroundColor: "white", borderRadius: 100, justifyContent: "center", alignItems: "center", marginTop: 20 }}
-                                >
-                                    <Text style={{ color: "#871014", fontSize: 18 }}>CANCEL</Text>
-                                </ClickAbleByAsim>
+                                            <ClickAbleByAsim
+                                                onPress={() => navigate("Home")}
+                                                style={{ height: 50, width: 270, backgroundColor: "white", borderRadius: 100, justifyContent: "center", alignItems: "center", marginTop: 20 }}
+                                            >
+                                                <Text style={{ color: "#871014", fontSize: 18 }}>CANCEL</Text>
+                                            </ClickAbleByAsim>
+                                        </>
+                                    )
+                                }
                                 {show && (
                                     <DateTimePicker
                                         testID="dateTimePicker"

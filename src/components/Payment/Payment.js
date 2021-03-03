@@ -207,7 +207,7 @@ const Payment = (props) => {
                             )
                     }
                 </ClickAbleByAsim>
-                <Text style={{ marginTop: 10, color: "grey" }}>
+                {/* <Text style={{ marginTop: 10, color: "grey" }}>
                     Or pay with
                 </Text>
 
@@ -252,7 +252,7 @@ const Payment = (props) => {
                         source={require("../../../assests/ic_paypal.png")}
                     />
                 </ClickAbleByAsim>
-
+ */}
 
 
 

@@ -6,6 +6,7 @@ import Carousel, { Pagination } from 'react-native-snap-carousel';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useSelector, useDispatch } from "react-redux"
 import * as Actions from "../../../store/Action"
+import { Alert } from 'react-native';
 
 const dummyData = [
     require("../../../assests/saffronpic1.png"),
@@ -21,11 +22,13 @@ const Home = (props) => {
 
     const Data = useSelector(({ res }) => res.CategoriesData)
     const Token = useSelector(({ auth }) => auth.Token)
+    const CartData = useSelector(({ res }) => res.CartData)
 
-
+    console.log(CartData)
     useEffect(() => {
         if (Token) {
             dispatch(Actions.GettingUserProfile())
+            dispatch(Actions.GetCart())
         }
     }, [Token])
 
@@ -126,7 +129,13 @@ const Home = (props) => {
                     contentContainerStyle={{ justifyContent: "center", alignItems: "center" }}
                 >
                     <ClickAbleByAsim
-                        onPress={() => navigate("ReserveTable")}
+                        onPress={() => {
+                            if(CartData.reservations?.length !=0){
+                                Alert.alert("","You already have a reservation! ");
+                                return
+                            }
+                            navigate("ReserveTable");
+                        }}
                         style={{
                             height: 50,
                             width: "90%",
