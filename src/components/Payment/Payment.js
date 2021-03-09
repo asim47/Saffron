@@ -7,9 +7,9 @@ import Axios from 'axios';
 import { API_ENDPOINT } from "../../../env";
 import { useDispatch, useSelector } from "react-redux"
 import * as Actions from "../../../store/Action"
-import PayPal from 'react-native-paypal-gateway';
+// import PayPal from 'react-native-paypal-gateway';
 
-PayPal.initialize(PayPal.SANDBOX, "AWwiDoy5r3PPGaA4GEnGuJX3_iNsLiF_zYtZKkBrdNTTCvGybzCURusWuq-Q-8j_fLE454JT70Jp4yUE");
+// PayPal.initialize(PayPal.SANDBOX, "AWwiDoy5r3PPGaA4GEnGuJX3_iNsLiF_zYtZKkBrdNTTCvGybzCURusWuq-Q-8j_fLE454JT70Jp4yUE");
 
 let stripe_url = 'https://api.stripe.com/v1/'
 let secret_key = 'pk_live_51HkOE8IBZjK7c5TEX7TCGtcsDGoEc8ht8dHm1ClcCHMR8rJW4zm1xvU1yZ3VYQWAEX4wNjOiL5Ya5Y4z3nmHay5S00s9YLR4nh'
